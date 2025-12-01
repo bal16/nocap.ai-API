@@ -1,0 +1,13 @@
+name: my-dev
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./postgresql/data:/var/lib/postgresql/data # Persist data in a local directory
