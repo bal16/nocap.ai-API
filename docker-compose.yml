@@ -10,4 +10,7 @@ services:
     ports:
       - "5432:5432"
     volumes:
-      - ./postgresql/data:/var/lib/postgresql/data # Persist data in a local directory
+      - pgdata:/var/lib/postgresql/data 
+
+volumes:
+  pgdata:
