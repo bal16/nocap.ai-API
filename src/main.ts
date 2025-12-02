@@ -1,13 +1,12 @@
 import { Elysia } from 'elysia';
 import openapi from '@elysiajs/openapi';
 import { cors } from '@elysiajs/cors';
+import { wrap } from '@bogeychan/elysia-logger';
+import * as z from 'zod';
 
 import { betterAuthPlugin, OpenAPI } from './plugins/better-auth';
-import { env } from './shared/env'; // use validated env
-import * as z from 'zod';
 import { customLogger } from './plugins/logger';
-import { wrap } from '@bogeychan/elysia-logger';
-// import { loggerPlugin } from './plugins/logger';
+import { env } from './shared/env'; // use validated env
 
 const app = new Elysia()
   .use(
@@ -28,7 +27,6 @@ const app = new Elysia()
       },
     })
   )
-  // .use(loggerPlugin)
   .use(betterAuthPlugin)
   .get(
     '/users/:id',
@@ -40,8 +38,8 @@ const app = new Elysia()
     {
       auth: true,
       detail: {
-        summary: 'Buscar um usuario pelo ID',
-        tags: ['users'],
+        summary: 'Test authenticated route',
+        tags: ['test'],
       },
       params: z.object({
         id: z.string(),
@@ -54,9 +52,26 @@ const app = new Elysia()
       },
     }
   )
-  .get('/', () => ({
-    message: 'Hello Elysia',
-  }))
+  .get(
+    '/',
+    () => {
+      return {
+        message: 'Hello Elysia',
+      };
+    },
+    {
+      auth: false,
+      detail: {
+        summary: 'Test unauthenticated route',
+        tags: ['test'],
+      },
+      response: {
+        200: z.object({
+          message: z.string(),
+        }),
+      },
+    }
+  )
   .listen(env.PORT); // from env
 
 customLogger.info(
