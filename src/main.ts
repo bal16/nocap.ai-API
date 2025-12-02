@@ -54,7 +54,8 @@ const app = new Elysia()
   )
   .get(
     '/',
-    () => {
+    (ctx) => {
+      ctx.log.info('Root endpoint accessed');
       return {
         message: 'Hello Elysia',
       };
