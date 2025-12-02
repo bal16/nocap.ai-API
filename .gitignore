@@ -47,6 +47,7 @@ yarn-error.log*
 **/*.log
 package-lock.json
 **/*.bun
-/prisma/generated
 
+# prisma
 /prisma/generated
+/prisma/migrations
