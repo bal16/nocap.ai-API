@@ -1,19 +1,16 @@
 import { Elysia } from 'elysia';
 import openapi from '@elysiajs/openapi';
-
 import { cors } from '@elysiajs/cors';
 
-import { OpenAPI } from './plugins/openApi';
-import { loggerPlugin } from './plugins/logger';
-import { auth } from './features/auth/server';
-// import { auth } from "./features/auth/server";
-// import { authService } from "./features/auth/auth.service";
+import { betterAuthPlugin, OpenAPI } from './plugins/better-auth';
+import { env } from './shared/env'; // use validated env
+import * as z from 'zod';
+// import { loggerPlugin } from './plugins/logger';
 
 const app = new Elysia()
-  .use(loggerPlugin)
   .use(
     cors({
-      origin: 'localhost:5173',
+      origin: env.ORIGIN, // from env
     })
   )
   .use(
@@ -24,15 +21,39 @@ const app = new Elysia()
       },
     })
   )
-  .mount(auth.handler)
+  // .use(loggerPlugin)
+  .use(betterAuthPlugin)
+  .get(
+    '/users/:id',
+    ({ params, user }) => {
+      const userId = params.id;
+      const authenticatedUserName = user.name;
+      return { id: userId, name: authenticatedUserName };
+    },
+    {
+      auth: true,
+      detail: {
+        summary: 'Buscar um usuario pelo ID',
+        tags: ['users'],
+      },
+      params: z.object({
+        id: z.string(),
+      }),
+      response: {
+        200: z.object({
+          id: z.string(),
+          name: z.string(),
+        }),
+      },
+    }
+  )
   .get('/', () => ({
     message: 'Hello Elysia',
   }))
-  // .get("/example", () => "Hello Elysia")
-  .listen(3000);
+  .listen(env.PORT); // from env
 
 console.log(
-  `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port}`
+  `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port} (${env.NODE_ENV})`
 );
 
 // export default app;
