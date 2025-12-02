@@ -5,7 +5,7 @@ import { wrap } from '@bogeychan/elysia-logger';
 import * as z from 'zod';
 
 import { betterAuthPlugin, OpenAPI } from './plugins/better-auth';
-import { customLogger } from './plugins/logger';
+import { logger } from './plugins/logger';
 import { env } from './shared/env'; // use validated env
 
 const app = new Elysia()
@@ -15,7 +15,7 @@ const app = new Elysia()
     })
   )
   .use(
-    wrap(customLogger, {
+    wrap(logger, {
       autoLogging: true,
     })
   )
@@ -74,7 +74,7 @@ const app = new Elysia()
   )
   .listen(env.PORT); // from env
 
-customLogger.info(
+logger.info(
   `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port} (${env.NODE_ENV})`
 );
 

@@ -1,6 +1,6 @@
 import pino from 'pino';
 
-export const customLogger = pino({
+export const logger = pino({
   level: 'debug',
   transport: {
     target: 'pino-pretty', // For human-readable console output
@@ -9,5 +9,3 @@ export const customLogger = pino({
     },
   },
 });
-
-
