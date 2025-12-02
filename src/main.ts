@@ -19,6 +19,7 @@ const app = new Elysia()
       autoLogging: true,
     })
   )
+  .use(betterAuthPlugin)
   .use(
     openapi({
       documentation: {
@@ -27,7 +28,26 @@ const app = new Elysia()
       },
     })
   )
-  .use(betterAuthPlugin)
+  .get(
+    '/',
+    (ctx) => {
+      ctx.log.info('Root endpoint accessed');
+      return {
+        message: 'Hello Elysia',
+      };
+    },
+    {
+      detail: {
+        summary: 'Test unauthenticated route',
+        tags: ['test'],
+      },
+      response: {
+        200: z.object({
+          message: z.string(),
+        }),
+      },
+    }
+  )
   .get(
     '/users/:id',
     ({ params, user }) => {
@@ -48,27 +68,6 @@ const app = new Elysia()
         200: z.object({
           id: z.string(),
           name: z.string(),
-        }),
-      },
-    }
-  )
-  .get(
-    '/',
-    (ctx) => {
-      ctx.log.info('Root endpoint accessed');
-      return {
-        message: 'Hello Elysia',
-      };
-    },
-    {
-      auth: false,
-      detail: {
-        summary: 'Test unauthenticated route',
-        tags: ['test'],
-      },
-      response: {
-        200: z.object({
-          message: z.string(),
         }),
       },
     }
