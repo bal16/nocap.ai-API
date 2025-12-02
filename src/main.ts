@@ -1,17 +1,17 @@
-import { Elysia } from "elysia";
-import openapi from "@elysiajs/openapi";
+import { Elysia } from 'elysia';
+import openapi from '@elysiajs/openapi';
 
-import { cors } from "@elysiajs/cors";
+import { cors } from '@elysiajs/cors';
 
-import { OpenAPI } from "./plugins/openApi";
-import { auth } from "./features/auth/server";
+import { OpenAPI } from './plugins/openApi';
+import { auth } from './features/auth/server';
 // import { auth } from "./features/auth/server";
 // import { authService } from "./features/auth/auth.service";
 
 const app = new Elysia()
   .use(
     cors({
-      origin: "localhost:5173",
+      origin: 'localhost:5173',
     })
   )
   .use(
@@ -23,8 +23,8 @@ const app = new Elysia()
     })
   )
   .mount(auth.handler)
-  .get("/", () => ({
-    message: "Hello Elysia",
+  .get('/', () => ({
+    message: 'Hello Elysia',
   }))
   // .get("/example", () => "Hello Elysia")
   .listen(3000);

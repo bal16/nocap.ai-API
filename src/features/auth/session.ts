@@ -1,3 +1,3 @@
-import type { auth } from "./server";
+import type { auth } from './server';
 
 export type Session = typeof auth.$Infer.Session;

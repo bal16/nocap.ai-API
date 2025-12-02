@@ -1,3 +1,3 @@
-import { Elysia } from "elysia";
+import { Elysia } from 'elysia';
 
-const exampleRoutes = new Elysia().get("/example", () => "Hello Elysia");
+const exampleRoutes = new Elysia().get('/example', () => 'Hello Elysia');
