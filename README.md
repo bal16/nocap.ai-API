@@ -19,7 +19,31 @@ bun run dev
 ## Tree
 
 ```text
-
+├──  .env //ignored
+├──  .env.example
+├──  node_modules
+├──  package.json
+├──  prisma
+│   ├──  generated //ignored
+│   ├──  migrations //ignored
+│   └──  schema.prisma
+├──  prisma.config.ts
+├──  README.md
+├── 󱧼 src
+│   ├──  config
+│   │   ├──  auth.ts
+│   │   └──  db.ts
+│   ├──  features
+│   │   └──  auth
+│   │   └──  example
+│   │       ├──  example.model.ts
+│   │       ├──  example.service.ts
+│   │       └──  routes.ts
+│   ├──  main.ts
+│   ├──  plugins
+│   │   └──  openApi.ts
+│   └──  shared
+└──  tsconfig.json
 ```
 
 Open http://localhost:3000/ with your browser to see the result.
