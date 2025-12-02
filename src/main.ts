@@ -5,12 +5,19 @@ import { cors } from '@elysiajs/cors';
 import { betterAuthPlugin, OpenAPI } from './plugins/better-auth';
 import { env } from './shared/env'; // use validated env
 import * as z from 'zod';
+import { customLogger } from './plugins/logger';
+import { wrap } from '@bogeychan/elysia-logger';
 // import { loggerPlugin } from './plugins/logger';
 
 const app = new Elysia()
   .use(
     cors({
-      origin: env.ORIGIN, // from env
+      origin: env.ORIGIN,
+    })
+  )
+  .use(
+    wrap(customLogger, {
+      autoLogging: true,
     })
   )
   .use(
@@ -52,7 +59,7 @@ const app = new Elysia()
   }))
   .listen(env.PORT); // from env
 
-console.log(
+customLogger.info(
   `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port} (${env.NODE_ENV})`
 );
 

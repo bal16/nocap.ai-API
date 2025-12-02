@@ -1,6 +1,13 @@
-import { Elysia } from 'elysia';
-import { Logestic } from 'logestic';
+import pino from 'pino';
 
-export const loggerPlugin = new Elysia({ name: 'LoggerPlugin' }).use(
-  Logestic.preset('fancy') //common, simple
-);
+export const customLogger = pino({
+  level: 'debug',
+  transport: {
+    target: 'pino-pretty', // For human-readable console output
+    options: {
+      colorize: true,
+    },
+  },
+});
+
+
