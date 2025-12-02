@@ -19,6 +19,7 @@
     "better-auth": "^1.4.4",
     "dotenv": "^17.2.3",
     "elysia": "latest",
+    "logestic": "^1.2.4",
     "pg": "^8.16.3",
     "prisma": "^7.0.1"
   },

@@ -4,11 +4,13 @@ import openapi from '@elysiajs/openapi';
 import { cors } from '@elysiajs/cors';
 
 import { OpenAPI } from './plugins/openApi';
+import { loggerPlugin } from './plugins/logger';
 import { auth } from './features/auth/server';
 // import { auth } from "./features/auth/server";
 // import { authService } from "./features/auth/auth.service";
 
 const app = new Elysia()
+  .use(loggerPlugin)
   .use(
     cors({
       origin: 'localhost:5173',
