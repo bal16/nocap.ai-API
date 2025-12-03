@@ -1,13 +1,12 @@
 import { Elysia } from 'elysia';
 import openapi from '@elysiajs/openapi';
 import { cors } from '@elysiajs/cors';
+import { wrap } from '@bogeychan/elysia-logger';
 import * as z from 'zod';
 
 import { betterAuthPlugin, OpenAPI } from './plugins/better-auth';
-import { logger, loggerPlugins } from './plugins/logger';
+import { logger } from './plugins/logger';
 import { env } from './shared/env'; // use validated env
-
-// import { trendRoutes } from './features/trends/server';
 
 const app = new Elysia()
   .use(
@@ -15,7 +14,11 @@ const app = new Elysia()
       origin: env.ORIGIN,
     })
   )
-  .use(loggerPlugins)
+  .use(
+    wrap(logger, {
+      autoLogging: true,
+    })
+  )
   .use(betterAuthPlugin)
   .use(
     openapi({
@@ -25,7 +28,6 @@ const app = new Elysia()
       },
     })
   )
-  // .use(trendRoutes)
   .get(
     '/',
     (ctx) => {
