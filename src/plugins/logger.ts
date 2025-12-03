@@ -1,5 +1,3 @@
-import { wrap } from '@bogeychan/elysia-logger';
-import { Elysia } from 'elysia';
 import pino from 'pino';
 
 export const logger = pino({
@@ -11,9 +9,3 @@ export const logger = pino({
     },
   },
 });
-
-export const loggerPlugins = new Elysia({ name: 'logger' }).use(
-  wrap(logger, {
-    autoLogging: true,
-  })
-);
