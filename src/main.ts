@@ -1,11 +1,10 @@
 import { Elysia } from 'elysia';
 import openapi from '@elysiajs/openapi';
 import { cors } from '@elysiajs/cors';
-import { wrap } from '@bogeychan/elysia-logger';
 import * as z from 'zod';
 
 import { betterAuthPlugin, OpenAPI } from './plugins/better-auth';
-import { logger } from './plugins/logger';
+import { loggerPlugins, logger } from './plugins/logger';
 import { env } from './shared/env'; // use validated env
 
 const app = new Elysia()
@@ -14,11 +13,7 @@ const app = new Elysia()
       origin: env.ORIGIN,
     })
   )
-  .use(
-    wrap(logger, {
-      autoLogging: true,
-    })
-  )
+  .use(loggerPlugins)
   .use(betterAuthPlugin)
   .use(
     openapi({
