@@ -2,6 +2,21 @@
 
 ## Info
 
+- App Name: NoCap.AI – Marketing Sosmed App
+- Version: 1.0.0
+- Description: Backend API for social media marketing workflows: auth, image uploads, AI-assisted content generation, and engagement analytics.
+- Authentication:
+  - Scheme: Bearer JWT (Authorization: Bearer `<token>`)
+  - Providers: Email/Password, Google OAuth
+- Tags (Feature Groups):
+  - Auth
+  - Image Curation
+  - Caption Generation
+  - Song Recommendation
+  - Topic Generation
+  - History Generation
+  - Engagement Analytics
+
 ## Feature
 
 ### Auth
@@ -255,10 +270,7 @@ Get a pre-signed URL to upload an image directly to storage (S3 Compatible). The
 ```json
 {
   "fileName": "profile.png", // required string: original file name; used for key/extension validation
-  "contentType": "image/png", // required string: MIME type (e.g., image/png, image/jpeg, image/webp)
-  "path": "users/usr_123/avatars", // optional string: storage folder/path prefix for the object key
-  "expiresIn": 300, // optional number: URL expiry in seconds (default: 300s)
-  "maxSize": 5242880 // optional number: client-enforced max upload size in bytes (e.g., 5MB)
+  "contentType": "image/png" // required string: MIME type (e.g., image/png, image/jpeg, image/webp)
 }
 ```
 
