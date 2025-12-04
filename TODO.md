@@ -8,7 +8,16 @@
   - [x] Logger
 - [ ] Create Exception Handlers
 - [ ] Setup for testing
-  - [ ] Unit Test
-  - [ ] E2E Test
-- [ ] Implement App Feature
-  - [ ] What?
+  - [ ] Unit Test?
+  - [x] E2E Test
+- [ ] Implement Marketing Sosmed App Feature
+  - [x] Auth
+    - [x] email password
+    - [x] Google
+  - [ ] Image Post
+    - [x] Upload Image
+    - [ ] Caption Generation
+    - [ ] Song recomendation
+    - [ ] Topic geeration
+    - [ ] History Generation
+  - [ ] Engagement Analythic
