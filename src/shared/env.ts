@@ -16,6 +16,11 @@ const EnvSchema = z.object({
     .default((process.env.NODE_ENV ?? 'development') === 'development' ? 'debug' : 'info'),
   DATABASE_URL: z.string().min(1, 'DATABASE_URL is required'),
   ORIGIN: z.string().default('http://localhost:5173'),
+
+  // New: auth-related configuration
+  AUTH_BASE_PATH: z.string().default('/auth'),
+  GOOGLE_CLIENT_ID: z.string().min(1, 'GOOGLE_CLIENT_ID is required'),
+  GOOGLE_CLIENT_SECRET: z.string().min(1, 'GOOGLE_CLIENT_SECRET is required'),
 });
 
 type Env = z.infer<typeof EnvSchema>;
@@ -26,6 +31,11 @@ const raw = {
   LOG_LEVEL: Bun.env.LOG_LEVEL ?? process.env.LOG_LEVEL,
   DATABASE_URL: Bun.env.DATABASE_URL ?? process.env.DATABASE_URL,
   ORIGIN: Bun.env.ORIGIN ?? process.env.ORIGIN,
+
+  // New: auth-related envs
+  AUTH_BASE_PATH: Bun.env.AUTH_BASE_PATH ?? process.env.AUTH_BASE_PATH,
+  GOOGLE_CLIENT_ID: Bun.env.GOOGLE_CLIENT_ID ?? process.env.GOOGLE_CLIENT_ID,
+  GOOGLE_CLIENT_SECRET: Bun.env.GOOGLE_CLIENT_SECRET ?? process.env.GOOGLE_CLIENT_SECRET,
 };
 
 const result = EnvSchema.safeParse(raw);
@@ -49,5 +59,7 @@ export function envSummary() {
     PORT: env.PORT,
     LOG_LEVEL: env.LOG_LEVEL,
     ORIGIN: env.ORIGIN,
+    AUTH_BASE_PATH: env.AUTH_BASE_PATH,
+    // Intentionally omit secrets
   };
 }

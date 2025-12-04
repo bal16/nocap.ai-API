@@ -5,7 +5,7 @@ import * as z from 'zod';
 
 import { betterAuthPlugin, OpenAPI } from './plugins/better-auth';
 import { loggerPlugins, logger } from './plugins/logger';
-import { env } from './shared/env'; // use validated env
+import { env } from './shared/env';
 
 const app = new Elysia()
   .use(
