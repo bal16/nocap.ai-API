@@ -1,6 +1,6 @@
 {
   "version": "1",
-  "name": "my/be",
+  "name": "NoCap.AI/be",
   "type": "collection",
   "ignore": [
     "node_modules",

@@ -1,0 +1,20 @@
+meta {
+  name: Get Presign Image URL
+  type: http
+  seq: 3
+}
+
+get {
+  url: {{BASE_URL}}/image/get-presign-ur
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: {{ACCESS_TOKEN}}
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
