@@ -33,6 +33,7 @@ export const openApiPlugins = new Elysia({ name: 'open-api' }).use(
       components: await OpenAPI.components,
       paths: await OpenAPI.getPaths(),
     },
+    path: '/docs',
     mapJsonSchema: {
       zod: z.toJSONSchema,
     },
