@@ -10,7 +10,7 @@ const EnvSchema = z.object({
       if (Number.isNaN(n)) throw new Error('PORT must be an integer');
       return n;
     })
-    .refine((n) => n >= 1 && n <= 65535, 'PORT must be between 1 and 65535'),
+    .refine((n) => n >= 1 && n <= 65_535, 'PORT must be between 1 and 65535'),
   LOG_LEVEL: z
     .enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace'])
     .default((process.env.NODE_ENV ?? 'development') === 'development' ? 'debug' : 'info'),
@@ -21,6 +21,13 @@ const EnvSchema = z.object({
   AUTH_BASE_PATH: z.string().default('/auth'),
   GOOGLE_CLIENT_ID: z.string().min(1, 'GOOGLE_CLIENT_ID is required'),
   GOOGLE_CLIENT_SECRET: z.string().min(1, 'GOOGLE_CLIENT_SECRET is required'),
+
+  // New: S3 configuration
+  S3_REGION: z.string().min(1, 'S3_REGION is required'),
+  S3_ENDPOINT: z.string().min(1, 'S3_ENDPOINT is required'),
+  S3_BUCKET_NAME: z.string().min(1, 'S3_BUCKET_NAME is required'),
+  S3_ACCESS_KEY_ID: z.string().min(1, 'S3_ACCESS_KEY_ID is required'),
+  S3_SECRET_ACCESS_KEY: z.string().min(1, 'S3_SECRET_ACCESS_KEY is required'),
 });
 
 type Env = z.infer<typeof EnvSchema>;
@@ -36,6 +43,12 @@ const raw = {
   AUTH_BASE_PATH: Bun.env.AUTH_BASE_PATH ?? process.env.AUTH_BASE_PATH,
   GOOGLE_CLIENT_ID: Bun.env.GOOGLE_CLIENT_ID ?? process.env.GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET: Bun.env.GOOGLE_CLIENT_SECRET ?? process.env.GOOGLE_CLIENT_SECRET,
+
+  S3_REGION: Bun.env.S3_REGION ?? process.env.S3_REGION,
+  S3_ENDPOINT: Bun.env.S3_ENDPOINT ?? process.env.S3_ENDPOINT,
+  S3_BUCKET_NAME: Bun.env.S3_BUCKET_NAME ?? process.env.S3_BUCKET_NAME,
+  S3_ACCESS_KEY_ID: Bun.env.S3_ACCESS_KEY_ID ?? process.env.S3_ACCESS_KEY_ID,
+  S3_SECRET_ACCESS_KEY: Bun.env.GOOGLE_CLIENT_SECRET ?? process.env.GOOGLE_CLIENT_SECRET,
 };
 
 const result = EnvSchema.safeParse(raw);
