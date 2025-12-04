@@ -1,73 +1,54 @@
 import { Elysia } from 'elysia';
-import openapi from '@elysiajs/openapi';
-import { cors } from '@elysiajs/cors';
 import * as z from 'zod';
 
-import { betterAuthPlugin, OpenAPI } from './plugins/better-auth';
-import { loggerPlugins, logger } from './plugins/logger';
 import { env } from './shared/env';
 
+import { betterAuthPlugin } from './plugins/better-auth';
+import { loggerPlugins, logger } from './plugins/logger';
+import { openApiPlugins } from './plugins/open-api';
+import { corsPlugins } from './plugins/cors';
+
+import { uploadController } from './features/upload/upload.controller';
+
 const app = new Elysia()
-  .use(
-    cors({
-      origin: env.ORIGIN,
-    })
-  )
+  .use(corsPlugins)
   .use(loggerPlugins)
   .use(betterAuthPlugin)
-  .use(
-    openapi({
-      documentation: {
-        components: await OpenAPI.components,
-        paths: await OpenAPI.getPaths(),
-      },
-    })
-  )
+  .use(openApiPlugins)
+  .use(uploadController)
   .get(
-    '/',
-    (ctx) => {
-      ctx.log.info('Root endpoint accessed');
+    '/health',
+    ({ log }) => {
+      log.info('health endpoint accessed');
       return {
-        message: 'Hello Elysia',
+        message: 'ok',
       };
     },
     {
       detail: {
-        summary: 'Test unauthenticated route',
-        tags: ['test'],
+        summary: 'Test service health',
+        tags: ['Health'],
       },
       response: {
         200: z.object({
           message: z.string(),
         }),
       },
-    }
-  )
-  .get(
-    '/users/:id',
-    ({ params, user }) => {
-      const userId = params.id;
-      const authenticatedUserName = user.name;
-      return { id: userId, name: authenticatedUserName };
-    },
-    {
-      auth: true,
-      detail: {
-        summary: 'Test authenticated route',
-        tags: ['test'],
-      },
-      params: z.object({
-        id: z.string(),
-      }),
-      response: {
-        200: z.object({
-          id: z.string(),
-          name: z.string(),
-        }),
+      responses: {
+        200: {
+          description: 'Pre-signed URL generated',
+          content: {
+            'application/json': {
+              example: {
+                message: 'ok',
+              },
+            },
+          },
+        },
       },
     }
   )
-  .listen(env.PORT); // from env
+  .listen(env.PORT);
 
 logger.info(
   `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port} (${env.NODE_ENV})`
