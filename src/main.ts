@@ -9,6 +9,7 @@ import { openApiPlugins } from './plugins/open-api';
 import { corsPlugins } from './plugins/cors';
 
 import { uploadController } from './features/upload/upload.controller';
+import { contentGeneratorController } from './features/generate/generate.controller';
 
 const app = new Elysia()
   .use(corsPlugins)
@@ -16,6 +17,7 @@ const app = new Elysia()
   .use(betterAuthPlugin)
   .use(openApiPlugins)
   .use(uploadController)
+  .use(contentGeneratorController)
   .get(
     '/health',
     ({ log }) => {

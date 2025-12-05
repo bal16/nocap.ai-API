@@ -23,6 +23,7 @@ model User {
   updatedAt     DateTime  @updatedAt
   sessions      Session[]
   accounts      Account[]
+  contents      GeneratedContent[]
 
   @@unique([email])
   @@map("user")
@@ -74,4 +75,21 @@ model Verification {
 
   @@index([identifier])
   @@map("verification")
+}
+
+model GeneratedContent {
+  id             String   @id @default(cuid())
+  userId         String
+  imageUrl       String
+  caption        Json?
+  songs          Json?
+  topics         Json?
+  engagement     Json?
+  curation       Json?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt 
+  
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  
+  @@map("generated_content")
 }

@@ -19,6 +19,10 @@ const EnvSchema = z.object({
 
   // New: auth-related configuration
   AUTH_BASE_PATH: z.string().default('/auth'),
+  GEMINI_API_URL: z.string().min(1, 'GEMINI_API_URL is required'),
+  GEMINI_API_KEY: z.string().min(1, 'GEMINI_API_KEY is required'),
+  ANALYSIS_API_URL: z.string().min(1, 'ANALYSIS_API_URL is required'),
+  ANALYSIS_API_KEY: z.string().min(1, 'ANALYSIS_API_KEY is required'),
   GOOGLE_CLIENT_ID: z.string().min(1, 'GOOGLE_CLIENT_ID is required'),
   GOOGLE_CLIENT_SECRET: z.string().min(1, 'GOOGLE_CLIENT_SECRET is required'),
 
@@ -41,6 +45,10 @@ const raw = {
 
   // New: auth-related envs
   AUTH_BASE_PATH: Bun.env.AUTH_BASE_PATH ?? process.env.AUTH_BASE_PATH,
+  GEMINI_API_URL: Bun.env.GEMINI_API_URL ?? process.env.GEMINI_API_URL,
+  GEMINI_API_KEY: Bun.env.GEMINI_API_KEY ?? process.env.GEMINI_API_KEY,
+  ANALYSIS_API_URL: Bun.env.ANALYSIS_API_URL ?? process.env.ANALYSIS_API_URL,
+  ANALYSIS_API_KEY: Bun.env.ANALYSIS_API_KEY ?? process.env.ANALYSIS_API_KEY,
   GOOGLE_CLIENT_ID: Bun.env.GOOGLE_CLIENT_ID ?? process.env.GOOGLE_CLIENT_ID,
   GOOGLE_CLIENT_SECRET: Bun.env.GOOGLE_CLIENT_SECRET ?? process.env.GOOGLE_CLIENT_SECRET,
 
