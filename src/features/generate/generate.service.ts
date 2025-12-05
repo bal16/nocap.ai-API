@@ -215,4 +215,72 @@ export class ContentGeneratorService {
       throw error;
     }
   }
+
+  async getUserHistory(userId: string, limitStr: string = '20', cursor?: string) {
+    const limit = parseInt(limitStr) || 20;
+
+    const items = await prisma.generatedContent.findMany({
+      where: { userId },
+      take: limit + 1,
+      cursor: cursor ? { id: cursor } : undefined,
+      orderBy: { createdAt: 'desc' },
+      select: {
+        id: true,
+        imageUrl: true,
+        createdAt: true,
+        //filekey belum
+      },
+    });
+
+    let nextCursor: string | null = null;
+    const hasNextPage = items.length > limit;
+
+    if (hasNextPage) {
+      const nextItem = items.pop();
+      nextCursor = nextItem!.id;
+    }
+
+    return {
+      items: items.map((item) => ({
+        id: item.id,
+        imageUrl: item.imageUrl,
+        fileKey: null, // perlu disesuaikan jika mau simpan fileKey
+        createdAt: item.createdAt.toISOString(),
+      })),
+      pageInfo: {
+        limit,
+        nextCursor,
+        hasNextPage,
+      },
+    };
+  }
+
+  async getHistoryDetail(userId: string, historyId: string) {
+    const item = await prisma.generatedContent.findUnique({
+      where: { id: historyId },
+    });
+
+    if (!item) return null;
+
+    if (item.userId !== userId) {
+      throw new Error('Unauthorized Access');
+    }
+
+    return {
+      item: {
+        id: item.id,
+        imageUrl: item.imageUrl,
+        filekey: null, // perlu disesuaikan jika mau simpan fileKey
+        curation: item.curation,
+        caption: item.caption,
+        songs: item.songs,
+        topics: item.topics,
+        engagement: item.engagement,
+        meta: {
+          language: 'id',
+          generatedAt: item.createdAt.toISOString(),
+        },
+      },
+    };
+  }
 }

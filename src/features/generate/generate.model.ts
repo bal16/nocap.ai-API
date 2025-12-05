@@ -89,3 +89,37 @@ export interface GeminiApiResponse {
     status: string;
   };
 }
+
+export const HistoryQuerySchema = t.Object({
+  limit: t.Optional(t.String({ default: '20' })), // Query param selalu string
+  cursor: t.Optional(t.String()),
+});
+
+export const HistoryListResponseSchema = t.Object({
+  items: t.Array(
+    t.Object({
+      id: t.String(),
+      fileKey: t.Union([t.String(), t.Null()]),
+      imageUrl: t.String(),
+      createdAt: t.String(),
+    })
+  ),
+  pageInfo: t.Object({
+    limit: t.Number(),
+    nextCursor: t.Union([t.String(), t.Null()]),
+    hasNextPage: t.Boolean(),
+  }),
+});
+
+export const HistoryDetailResponseSchema = t.Object({
+  item: t.Object({
+    id: t.String(),
+    imageUrl: t.String(),
+    curation: GenerateResponseSchema.properties.curation,
+    caption: GenerateResponseSchema.properties.caption,
+    songs: GenerateResponseSchema.properties.songs,
+    topics: GenerateResponseSchema.properties.topics,
+    engagement: GenerateResponseSchema.properties.engagement,
+    meta: GenerateResponseSchema.properties.meta,
+  }),
+});
