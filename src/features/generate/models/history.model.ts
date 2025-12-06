@@ -1,10 +1,16 @@
 import * as z from 'zod';
-import { CaptionSchema, CurationSchema, EngagementSchema, MetaSchema, SongSchema, TopicSchema } from './response.model';
+import {
+  CaptionSchema,
+  CurationSchema,
+  EngagementSchema,
+  MetaSchema,
+  SongSchema,
+  TopicSchema,
+} from './response.model';
 
 export const HistoryQuerySchema = z.object({
   // Query params come as strings
   limit: z.string().default('20').optional(),
-  cursor: z.string().optional(),
 });
 
 export const HistoryListResponseSchema = z.object({

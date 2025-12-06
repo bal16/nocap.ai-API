@@ -4,8 +4,8 @@ import { loggerPlugins } from '../../plugins/logger';
 import { betterAuthPlugin } from '../../plugins/better-auth';
 import { openApiPlugins } from '../../plugins/open-api';
 
-import { generateContent, getUserHistory } from './services';
-import { analyzeContentSchema, getHistorySchema } from './generate.docs';
+import { generateContent, getHistoryDetail, getUserHistory } from './services';
+import { analyzeContentSchema, getHistoryDetailSchema, getHistorySchema } from './generate.docs';
 
 export const contentGeneratorController = new Elysia({
   name: 'Generate Controller',
@@ -55,7 +55,7 @@ export const contentGeneratorController = new Elysia({
     '/history',
     async ({ query, user, set }) => {
       try {
-        const result = await getUserHistory(user.id, query.limit, query.cursor);
+        const result = await getUserHistory(user.id, query.limit);
         set.status = 200;
         return result;
       } catch (err: unknown) {
@@ -96,5 +96,5 @@ export const contentGeneratorController = new Elysia({
 //       return { status: 500, message: 'Internal Server Error' };
 //     }
 //   },
-//   getHistoryDetailSchema
+//   {...getHistoryDetailSchema, auth: true}
 // );

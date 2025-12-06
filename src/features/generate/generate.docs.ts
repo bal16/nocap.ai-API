@@ -97,20 +97,20 @@ export const analyzeContentSchema = {
 };
 
 export const getHistorySchema = {
-  // detail: {
-  //   summary: 'Get Generation History',
-  //   description: 'Fetch generated outputs history for the current session.',
-  //   operationId: 'getGenerationHistory',
-  //   tags: ['AI Generation'],
-  //   security: [{ bearerAuth: [] }],
-  //   responses: {
-  //     200: {
-  //       description: 'History List',
-  //       content: { 'application/json': { schema: HistoryListResponseSchema } },
-  //     },
-  //     401: { description: 'Unauthorized' },
-  //   },
-  // },
+  detail: {
+    summary: 'Get Generation History',
+    description: 'Fetch generated outputs history for the current session.',
+    operationId: 'getGenerationHistory',
+    tags: ['AI Generation'],
+    security: [{ bearerAuth: [] }],
+    // responses: {
+    //   200: {
+    //     description: 'History List',
+    //     content: { 'application/json': { schema: HistoryListResponseSchema } },
+    //   },
+    //   401: { description: 'Unauthorized' },
+    // },
+  },
   query: HistoryQuerySchema,
   response: {
     200: HistoryListResponseSchema,
@@ -127,15 +127,15 @@ export const getHistoryDetailSchema = {
     operationId: 'getGenerationHistoryDetail',
     tags: ['AI Generation'],
     security: [{ bearerAuth: [] }],
-    responses: {
-      200: {
-        description: 'Detail Item',
-        content: { 'application/json': { schema: HistoryDetailResponseSchema } },
-      },
-      403: { description: 'Forbidden' },
-      404: { description: 'Not Found' },
-      401: { description: 'Unauthorized' },
-    },
+  //   responses: {
+  //     200: {
+  //       description: 'Detail Item',
+  //       content: { 'application/json': { schema: HistoryDetailResponseSchema } },
+  //     },
+  //     403: { description: 'Forbidden' },
+  //     404: { description: 'Not Found' },
+  //     401: { description: 'Unauthorized' },
+  //   },
   },
   response: {
     200: HistoryDetailResponseSchema,

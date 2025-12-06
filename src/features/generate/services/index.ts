@@ -253,13 +253,12 @@ export const generateContent = async (
   return finalResult;
 };
 
-export const getUserHistory = async (userId: string, limitStr: string = '20', cursor?: string) => {
+export const getUserHistory = async (userId: string, limitStr: string = '20') => {
   const limit = parseInt(limitStr) || 20;
 
   const items = await prisma.generatedContent.findMany({
     where: { userId },
     take: limit + 1,
-    cursor: cursor ? { id: cursor } : undefined,
     orderBy: { createdAt: 'desc' },
     select: {
       id: true,
