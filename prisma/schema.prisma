@@ -14,13 +14,13 @@ datasource db {
 }
 
 model User {
-  id            String    @id
+  id            String             @id
   name          String
   email         String
-  emailVerified Boolean   @default(false)
+  emailVerified Boolean            @default(false)
   image         String?
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
+  createdAt     DateTime           @default(now())
+  updatedAt     DateTime           @updatedAt
   sessions      Session[]
   accounts      Account[]
   contents      GeneratedContent[]
@@ -78,18 +78,144 @@ model Verification {
 }
 
 model GeneratedContent {
-  id             String   @id @default(cuid())
-  userId         String
-  imageUrl       String
-  caption        Json?
-  songs          Json?
-  topics         Json?
-  engagement     Json?
-  curation       Json?
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt 
-  
-  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  
+  id        String   @id @default(cuid())
+  userId    String
+  imageUrl  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // One-to-one
+  caption    Caption?
+  curation   Curation?
+  engagement Engagement?
+
+  // One-to-many lists
+  songs  SongRecommendation[]
+  topics TopicRecommendation[]
+
+  @@index([userId, createdAt])
   @@map("generated_content")
+}
+
+model Caption {
+  id        String @id @default(cuid())
+  contentId String @unique
+  text      String
+
+  content      GeneratedContent     @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  // alternatives as separate rows
+  alternatives CaptionAlternative[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("caption")
+}
+
+model CaptionAlternative {
+  id        String @id @default(cuid())
+  captionId String
+  text      String
+
+  caption Caption @relation(fields: [captionId], references: [id], onDelete: Cascade)
+
+  @@index([captionId])
+  @@map("caption_alternative")
+}
+
+model SongRecommendation {
+  id        String  @id @default(cuid())
+  contentId String
+  title     String
+  artist    String
+  reason    String?
+
+  content GeneratedContent @relation(fields: [contentId], references: [id], onDelete: Cascade)
+
+  @@index([contentId])
+  @@map("song_recommendation")
+}
+
+model TopicRecommendation {
+  id         String @id @default(cuid())
+  contentId  String
+  topic      String
+  confidence Float?
+
+  content GeneratedContent @relation(fields: [contentId], references: [id], onDelete: Cascade)
+
+  @@index([contentId])
+  @@map("topic_recommendation")
+}
+
+enum RiskLevel {
+  low
+  medium
+  high
+}
+
+model Curation {
+  id            String    @id @default(cuid())
+  contentId     String    @unique
+  isAppropriate Boolean
+  risk          RiskLevel
+  notes         String?
+
+  content GeneratedContent @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  labels  CurationLabel[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("curation")
+}
+
+model CurationLabel {
+  id         String @id @default(cuid())
+  curationId String
+  label      String
+
+  curation Curation @relation(fields: [curationId], references: [id], onDelete: Cascade)
+
+  @@index([curationId])
+  @@map("curation_label")
+}
+
+model Engagement {
+  id             String @id @default(cuid())
+  contentId      String @unique
+  estimatedScore Float
+
+  content     GeneratedContent       @relation(fields: [contentId], references: [id], onDelete: Cascade)
+  drivers     EngagementDriver[]
+  suggestions EngagementSuggestion[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("engagement")
+}
+
+model EngagementDriver {
+  id           String @id @default(cuid())
+  engagementId String
+  text         String
+
+  engagement Engagement @relation(fields: [engagementId], references: [id], onDelete: Cascade)
+
+  @@index([engagementId])
+  @@map("engagement_driver")
+}
+
+model EngagementSuggestion {
+  id           String @id @default(cuid())
+  engagementId String
+  text         String
+
+  engagement Engagement @relation(fields: [engagementId], references: [id], onDelete: Cascade)
+
+  @@index([engagementId])
+  @@map("engagement_suggestion")
 }

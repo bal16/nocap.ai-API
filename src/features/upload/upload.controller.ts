@@ -28,5 +28,8 @@ export const uploadController = new Elysia({ name: 'Upload Controller', prefix: 
         maxSize: DEFAULT_MAX_SIZE,
       };
     },
-    generatePresignUrlSchema
+    {
+      auth: true,
+      ...generatePresignUrlSchema,
+    }
   );

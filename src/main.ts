@@ -22,6 +22,7 @@ const app = new Elysia()
     '/health',
     ({ log }) => {
       log.info('health endpoint accessed');
+
       return {
         message: 'ok',
       };

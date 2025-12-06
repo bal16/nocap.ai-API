@@ -2,7 +2,6 @@ import * as z from 'zod';
 import { UploadRequestSchema, UploadResponseSchema } from './upload.model';
 
 export const generatePresignUrlSchema = {
-  auth: true,
   detail: {
     summary: 'Generate pre-signed upload URL',
     description: 'Returns a pre-signed URL to upload an image and a signed access URL.',
@@ -30,7 +29,7 @@ export const generatePresignUrlSchema = {
               fileKey: 'users/123/posts/foto-unik.jpg',
               accessUrl: 'https://my-bucket.s3.aws.com/users/123/posts/foto-unik.jpg?Signature=...',
               expiresIn: 300,
-              maxSize: 5242880,
+              maxSize: 5_242_880,
             },
           },
         },
