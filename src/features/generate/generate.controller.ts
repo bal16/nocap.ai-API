@@ -73,28 +73,31 @@ export const contentGeneratorController = new Elysia({
       ...getHistorySchema,
       auth: true,
     }
+  )
+  .get(
+    '/history/:id',
+    async ({ params, user, set }) => {
+      try {
+        const result = await getHistoryDetail(user.id, params.id);
+
+        if (!result) {
+          set.status = 404;
+          return { status: 404, message: 'History not found' };
+        }
+
+        set.status = 200;
+        return result;
+      } catch (err: unknown) {
+        if (err instanceof Error && err.message === 'Unauthorized Access') {
+          set.status = 403;
+          return { status: 403, message: 'You don\'t have permission to view this item' };
+        }
+        set.status = 500;
+        return { status: 500, message: 'Internal Server Error' };
+      }
+    },
+    {
+      ...getHistoryDetailSchema,
+      auth: true
+    }
   );
-// .get(
-//   '/history/:id',
-//   async ({ params, user, set }) => {
-//     try {
-//       const result = await getHistoryDetail(user.id, params.id);
-
-//       if (!result) {
-//         set.status = 404;
-//         return { status: 404, message: 'History not found' };
-//       }
-
-//       set.status = 200;
-//       return result;
-//     } catch (err: unknown) {
-//       if (err instanceof Error && err.message === 'Unauthorized Access') {
-//         set.status = 403;
-//         return { status: 403, message: "You don't have permission to view this item" };
-//       }
-//       set.status = 500;
-//       return { status: 500, message: 'Internal Server Error' };
-//     }
-//   },
-//   {...getHistoryDetailSchema, auth: true}
-// );

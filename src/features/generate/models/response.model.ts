@@ -16,12 +16,12 @@ export const CaptionSchema = z.object({
 export const SongSchema = z.object({
   title: z.string(),
   artist: z.string(),
-  reason: z.string(),
+  reason: z.string().optional(),
 });
 
 export const TopicSchema = z.object({
   topic: z.string(),
-  confidence: z.number(),
+  confidence: z.number().optional(),
 });
 
 export const EngagementSchema = z.object({

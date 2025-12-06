@@ -1,3 +1,4 @@
+import * as z from 'zod';
 import {
   GenerateRequestSchema,
   GenerateResponseSchema,
@@ -103,13 +104,13 @@ export const getHistorySchema = {
     operationId: 'getGenerationHistory',
     tags: ['AI Generation'],
     security: [{ bearerAuth: [] }],
-    // responses: {
-    //   200: {
-    //     description: 'History List',
-    //     content: { 'application/json': { schema: HistoryListResponseSchema } },
-    //   },
-    //   401: { description: 'Unauthorized' },
-    // },
+    responses: {
+      200: {
+        description: 'History List',
+        content: { 'application/json': { example: HistoryListResponseSchema } },
+      },
+      401: { description: 'Unauthorized' },
+    },
   },
   query: HistoryQuerySchema,
   response: {
@@ -120,23 +121,26 @@ export const getHistorySchema = {
 };
 
 export const getHistoryDetailSchema = {
-  auth: true,
+  // auth: true,
   detail: {
     summary: 'Get History Detail',
     description: 'Fetch a single generated item by ID.',
     operationId: 'getGenerationHistoryDetail',
     tags: ['AI Generation'],
     security: [{ bearerAuth: [] }],
-  //   responses: {
-  //     200: {
-  //       description: 'Detail Item',
-  //       content: { 'application/json': { schema: HistoryDetailResponseSchema } },
-  //     },
-  //     403: { description: 'Forbidden' },
-  //     404: { description: 'Not Found' },
-  //     401: { description: 'Unauthorized' },
-  //   },
+    responses: {
+      200: {
+        description: 'Detail Item',
+        example: { 'application/json': { example: HistoryDetailResponseSchema } },
+      },
+      403: { description: 'Forbidden' },
+      404: { description: 'Not Found' },
+      401: { description: 'Unauthorized' },
+    },
   },
+  params: z.object({
+    id: z.cuid(),
+  }),
   response: {
     200: HistoryDetailResponseSchema,
     403: ErrorResponseSchema,
