@@ -11,6 +11,8 @@ export const auth = betterAuth({
     provider: 'postgresql',
   }),
 
+  trustedOrigins: env.TRUSTED_ORIGINS ? env.TRUSTED_ORIGINS.split(',') : [],
+
   plugins: [openAPI(), bearer()],
 
   emailAndPassword: {

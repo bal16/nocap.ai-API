@@ -15,9 +15,14 @@ const EnvSchema = z.object({
     .enum(['fatal', 'error', 'warn', 'info', 'debug', 'trace'])
     .default((process.env.NODE_ENV ?? 'development') === 'development' ? 'debug' : 'info'),
   DATABASE_URL: z.string().min(1, 'DATABASE_URL is required'),
+
+  // Deprecated: use TRUSTED_ORIGINS for CORS
   ORIGIN: z.string().default('http://localhost:5173'),
 
-  // New: auth-related configuration
+  // CORS: comma-separated list of trusted origins
+  TRUSTED_ORIGINS: z.string().optional(),
+
+  // Auth-related configuration
   AUTH_BASE_PATH: z.string().default('/auth'),
   GEMINI_API_URL: z.string().min(1, 'GEMINI_API_URL is required'),
   GEMINI_API_KEY: z.string().min(1, 'GEMINI_API_KEY is required'),
@@ -26,7 +31,7 @@ const EnvSchema = z.object({
   GOOGLE_CLIENT_ID: z.string().min(1, 'GOOGLE_CLIENT_ID is required'),
   GOOGLE_CLIENT_SECRET: z.string().min(1, 'GOOGLE_CLIENT_SECRET is required'),
 
-  // New: S3 configuration
+  // S3 configuration
   S3_REGION: z.string().min(1, 'S3_REGION is required'),
   S3_ENDPOINT: z.string().min(1, 'S3_ENDPOINT is required'),
   S3_BUCKET_NAME: z.string().min(1, 'S3_BUCKET_NAME is required'),
@@ -41,9 +46,10 @@ const raw = {
   PORT: Bun.env.PORT ?? process.env.PORT,
   LOG_LEVEL: Bun.env.LOG_LEVEL ?? process.env.LOG_LEVEL,
   DATABASE_URL: Bun.env.DATABASE_URL ?? process.env.DATABASE_URL,
-  ORIGIN: Bun.env.ORIGIN ?? process.env.ORIGIN,
 
-  // New: auth-related envs
+  ORIGIN: Bun.env.ORIGIN ?? process.env.ORIGIN,
+  TRUSTED_ORIGINS: Bun.env.TRUSTED_ORIGINS ?? process.env.TRUSTED_ORIGINS,
+
   AUTH_BASE_PATH: Bun.env.AUTH_BASE_PATH ?? process.env.AUTH_BASE_PATH,
   GEMINI_API_URL: Bun.env.GEMINI_API_URL ?? process.env.GEMINI_API_URL,
   GEMINI_API_KEY: Bun.env.GEMINI_API_KEY ?? process.env.GEMINI_API_KEY,
@@ -81,6 +87,7 @@ export function envSummary() {
     LOG_LEVEL: env.LOG_LEVEL,
     ORIGIN: env.ORIGIN,
     AUTH_BASE_PATH: env.AUTH_BASE_PATH,
+    TRUSTED_ORIGINS: env.TRUSTED_ORIGINS,
     // Intentionally omit secrets
   };
 }

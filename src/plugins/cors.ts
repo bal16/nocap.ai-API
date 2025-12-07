@@ -5,7 +5,7 @@ import { env } from '../shared/env';
 
 export const corsPlugins = new Elysia({ name: 'cors' }).use(
   cors({
-    origin: true,
+    origin: env.TRUSTED_ORIGINS ? env.TRUSTED_ORIGINS.split(',') : true, //sebelumnya env.ORIGIN
     credentials: true,
   })
 );
