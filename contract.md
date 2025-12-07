@@ -31,12 +31,12 @@ Sign up a user using email and password
 
 ```json
 {
-  "email": "new.user@example.com", // required string: user's email address
-  "name": "New User", // required string: user's display name
-  "password": "StrongP@ssw0rd!", // required string: user's password
-  "callbackURL": "https://app.example.com/verify-email", // optional string: URL used for email verification callback
-  "image": "https://cdn.example.com/avatars/new-user.png", // optional string: profile image URL
-  "rememberMe": true // optional boolean: if false, do not persist session; default true
+  "email": "new.user@example.com",
+  "name": "New User",
+  "password": "StrongP@ssw0rd!",
+  "callbackURL": "https://app.example.com/verify-email",
+  "image": "https://cdn.example.com/avatars/new-user.png",
+  "rememberMe": true
 }
 ```
 
@@ -44,15 +44,15 @@ Sign up a user using email and password
 
 ```json
 {
-  "token": "SESSION_JWT_TOKEN_OR_NULL", // string | null: session auth token; null if not issued yet
+  "token": "SESSION_JWT_TOKEN_OR_NULL",
   "user": {
-    "id": "usr_abc123", // string: unique user identifier
-    "email": "new.user@example.com", // string (email): user's email
-    "name": "New User", // string: user's name
-    "image": "https://cdn.example.com/avatars/new-user.png", // string | null (uri): profile image URL
-    "emailVerified": false, // boolean: whether email is verified (usually false right after signup)
-    "createdAt": "2025-12-03T07:21:16.471Z", // string (ISO date-time): when the user was created
-    "updatedAt": "2025-12-03T07:21:16.471Z" // string (ISO date-time): last update timestamp
+    "id": "usr_abc123",
+    "email": "new.user@example.com",
+    "name": "New User",
+    "image": "https://cdn.example.com/avatars/new-user.png",
+    "emailVerified": false,
+    "createdAt": "2025-12-03T07:21:16.471Z",
+    "updatedAt": "2025-12-03T07:21:16.471Z"
   }
 }
 ```
@@ -61,7 +61,7 @@ Sign up a user using email and password
 
 ```json
 {
-  "message": "Email already in use" // string: human-readable error description
+  "message": "Email already in use"
 }
 ```
 
@@ -75,10 +75,10 @@ Sign in with email and password
 
 ```json
 {
-  "email": "user@example.com", // required string: user's email
-  "password": "StrongP@ssw0rd!", // required string: user's password
-  "callbackURL": "/verify", // optional string | null: redirect URL for email verification
-  "rememberMe": null // optional string | null: client flag; null uses server default
+  "email": "user@example.com",
+  "password": "StrongP@ssw0rd!",
+  "callbackURL": "/verify",
+  "rememberMe": null
 }
 ```
 
@@ -86,18 +86,18 @@ Sign in with email and password
 
 ```json
 {
-  "redirect": false, // boolean: false indicates a direct session response (no redirect)
-  "token": "SESSION_JWT_TOKEN", // string: session token to authenticate subsequent requests
+  "redirect": false,
+  "token": "SESSION_JWT_TOKEN",
   "user": {
-    "id": "usr_123", // string: unique user identifier
-    "name": "Jane Doe", // string: user's display name
-    "email": "user@example.com", // string: user's email
-    "emailVerified": false, // boolean (read-only): whether email is verified; default false
-    "image": "https://cdn/avatar.png", // string: profile image URL
-    "createdAt": "2025-12-03T07:21:16Z", // string (RFC 3339 date-time): generated at runtime
-    "updatedAt": "2025-12-03T07:21:16Z" // string (RFC 3339 date-time): generated at runtime
+    "id": "usr_123",
+    "name": "Jane Doe",
+    "email": "user@example.com",
+    "emailVerified": false,
+    "image": "https://cdn/avatar.png",
+    "createdAt": "2025-12-03T07:21:16Z",
+    "updatedAt": "2025-12-03T07:21:16Z"
   },
-  "url": null // string | null: redirect URL not used in session response
+  "url": null
 }
 ```
 
@@ -105,10 +105,10 @@ Sign in with email and password
 
 ```json
 {
-  "redirect": true, // boolean: true indicates client should follow the redirect URL
-  "token": null, // string | null: token is absent when redirecting to complete auth
-  "user": null, // object | null: user not returned for redirect flows
-  "url": "/verify" // string | null: redirect URL for verification or provider flow
+  "redirect": true,
+  "token": null,
+  "user": null,
+  "url": "/verify"
 }
 ```
 
@@ -116,7 +116,7 @@ Sign in with email and password
 
 ```json
 {
-  "message": "Invalid email or password" // string: human-readable error message
+  "message": "Invalid email or password"
 }
 ```
 
@@ -130,23 +130,22 @@ Sign in with a social provider
 
 ```json
 {
-  "provider": "google", // required: name of social provider ("google")
-  "callbackURL": "/dashboard", // optional string: where to redirect after success; null to skip
-  "newUserCallbackURL": "/welcome", // optional string: redirect for newly created users; null to skip
-  "errorCallbackURL": "/error", // optional string: redirect if an error occurs; null to skip
-  "disableRedirect": false, // optional boolean: if true, do not auto-redirect; you handle flow
+  "provider": "google",
+  "callbackURL": "/dashboard",
+  "newUserCallbackURL": "/welcome",
+  "errorCallbackURL": "/error",
+  "disableRedirect": false,
   "idToken": {
-    // optional object: tokens obtained from the provider
-    "token": "ID_TOKEN_VALUE", // required if idToken provided: provider ID token (JWT)
-    "nonce": "random-nonce", // optional string: nonce used to generate/validate the token
-    "accessToken": "ACCESS_TOKEN", // optional string: provider access token
-    "refreshToken": null, // optional string: provider refresh token
-    "expiresAt": 1735900000000 // optional number (ms since epoch): token expiry time
+    "token": "ID_TOKEN_VALUE",
+    "nonce": "random-nonce",
+    "accessToken": "ACCESS_TOKEN",
+    "refreshToken": null,
+    "expiresAt": 1735900000000
   },
-  "scopes": ["email", "profile"], // optional array: requested scopes; overrides defaults
-  "requestSignUp": false, // optional boolean: force a sign-up flow when implicit sign-up is disabled
-  "loginHint": "user@example.com", // optional string: hint for provider login UI
-  "additionalData": "utm=campaign" // optional string: any extra data you want to persist/log
+  "scopes": ["email", "profile"],
+  "requestSignUp": false,
+  "loginHint": "user@example.com",
+  "additionalData": "utm=campaign"
 }
 ```
 
@@ -154,18 +153,18 @@ Sign in with a social provider
 
 ```json
 {
-  "token": "JWT_OR_SESSION_TOKEN", // string: token for authenticating subsequent requests
+  "token": "JWT_OR_SESSION_TOKEN",
   "user": {
-    "id": "usr_123", // string: internal user ID
-    "name": "Jane Doe", // string: user's display name
-    "email": "jane@example.com", // string: user's email
-    "emailVerified": true, // boolean: whether provider/email has been verified
-    "image": "https://cdn/avatar", // string: URL to profile image (if available)
-    "createdAt": "2025-12-03T07:21:16.471Z", // ISO datetime: when the user was created
-    "updatedAt": "2025-12-03T07:21:16.471Z" // ISO datetime: last update time
+    "id": "usr_123",
+    "name": "Jane Doe",
+    "email": "jane@example.com",
+    "emailVerified": true,
+    "image": "https://cdn/avatar",
+    "createdAt": "2025-12-03T07:21:16.471Z",
+    "updatedAt": "2025-12-03T07:21:16.471Z"
   },
-  "url": "/dashboard", // string | null: redirect URL if applicable
-  "redirect": false // boolean: server suggests client should redirect (true) or not (false)
+  "url": "/dashboard",
+  "redirect": false
 }
 ```
 
@@ -173,7 +172,7 @@ Sign in with a social provider
 
 ```json
 {
-  "message": "Invalid provider or token" // string: human-readable error message
+  "message": "Invalid provider or token"
 }
 ```
 
@@ -185,19 +184,19 @@ Sign out the current user
 
 **Headers**:
 
-- `Authorization: Bearer SESSION_JWT_TOKEN` // required: token of the currently signed-in user
+- `Authorization: Bearer SESSION_JWT_TOKEN`
 
 **Request (Example with comments)**:
 
 ```json
-{} // empty body; sign-out uses the Authorization header to identify the session
+{}
 ```
 
 **Response (Success)**:
 
 ```json
 {
-  "success": true // boolean: indicates the session was invalidated successfully
+  "success": true
 }
 ```
 
@@ -205,7 +204,7 @@ Sign out the current user
 
 ```json
 {
-  "message": "Unauthorized" // string: error description, e.g., missing/invalid token
+  "message": "Unauthorized"
 }
 ```
 
@@ -217,30 +216,30 @@ Get the current session
 
 **Headers**:
 
-- `Authorization: Bearer SESSION_JWT_TOKEN` // required: current session token
+- `Authorization: Bearer SESSION_JWT_TOKEN`
 
 **Response (Success)**:
 
 ```json
 {
   "session": {
-    "id": "sess_123", // string: unique session identifier
-    "token": "SESSION_JWT_TOKEN", // string: session token (same as provided)
-    "userId": "usr_123", // string: ID of the user who owns the session
-    "createdAt": "2025-12-03T07:21:16Z", // string (RFC 3339): generated at runtime
-    "updatedAt": "2025-12-03T07:21:16Z", // string (RFC 3339): generated at runtime
-    "expiresAt": "2025-12-10T07:21:16Z", // string (RFC 3339): when the session expires
-    "ipAddress": "203.0.113.42", // string: last seen IP address (if collected)
-    "userAgent": "Mozilla/5.0 ..." // string: last seen user agent (if collected)
+    "id": "sess_123",
+    "token": "SESSION_JWT_TOKEN",
+    "userId": "usr_123",
+    "createdAt": "2025-12-03T07:21:16Z",
+    "updatedAt": "2025-12-03T07:21:16Z",
+    "expiresAt": "2025-12-10T07:21:16Z",
+    "ipAddress": "203.0.113.42",
+    "userAgent": "Mozilla/5.0 ..."
   },
   "user": {
-    "id": "usr_123", // string: unique user identifier
-    "email": "user@example.com", // string: user's email
-    "name": "Jane Doe", // string: user's display name
-    "image": "https://cdn/avatar.png", // string: profile image URL
-    "emailVerified": false, // boolean (read-only): whether email is verified; default false
-    "createdAt": "2025-12-03T07:21:16Z", // string (RFC 3339): generated at runtime
-    "updatedAt": "2025-12-03T07:21:16Z" // string (RFC 3339): generated at runtime
+    "id": "usr_123",
+    "email": "user@example.com",
+    "name": "Jane Doe",
+    "image": "https://cdn/avatar.png",
+    "emailVerified": false,
+    "createdAt": "2025-12-03T07:21:16Z",
+    "updatedAt": "2025-12-03T07:21:16Z"
   }
 }
 ```
@@ -249,7 +248,7 @@ Get the current session
 
 ```json
 {
-  "message": "Unauthorized" // string: error description, e.g., missing/invalid token
+  "message": "Unauthorized"
 }
 ```
 
@@ -263,14 +262,14 @@ Get a pre-signed URL to upload an image directly to storage (S3 Compatible). The
 
 **Headers**:
 
-- `Authorization: Bearer SESSION_JWT_TOKEN` // required: authenticated user session
+- `Authorization: Bearer SESSION_JWT_TOKEN`
 
 **Request (Example with comments)**:
 
 ```json
 {
-  "fileName": "profile.png", // required string: original file name; used for key/extension validation
-  "contentType": "image/png" // required string: MIME type (e.g., image/png, image/jpeg, image/webp)
+  "fileName": "profile.png",
+  "contentType": "image/png"
 }
 ```
 
@@ -278,12 +277,12 @@ Get a pre-signed URL to upload an image directly to storage (S3 Compatible). The
 
 ```json
 {
-  "uploadUrl": "https://my-bucket.s3.aws.com/users/123/550e8400-e29b-41d4-a716-446655440000.png?Signature=...", // string: pre-signed URL for upload (PUT)
-  "fileKey": "users/123/550e8400-e29b-41d4-a716-446655440000.png", // string: storage object key to persist
-  "bucket": "my-bucket", // string: bucket name
-  "region": "us-east-1", // string: storage region
-  "expiresIn": 300, // number (seconds): how long the presign stays valid
-  "maxSize": 5242880 // number (bytes): max allowed upload size
+  "uploadUrl": "https://my-bucket.s3.aws.com/users/123/550e8400-e29b-41d4-a716-446655440000.png?Signature=...",
+  "fileKey": "users/123/550e8400-e29b-41d4-a716-446655440000.png",
+  "bucket": "my-bucket",
+  "region": "us-east-1",
+  "expiresIn": 300,
+  "maxSize": 5242880
 }
 ```
 
@@ -303,13 +302,13 @@ Generate a short-lived access URL to read an uploaded image by its fileKey.
 
 **Headers**:
 
-- `Authorization: Bearer SESSION_JWT_TOKEN` // required: authenticated user session
+- `Authorization: Bearer SESSION_JWT_TOKEN`
 
 **Request (Example with comments)**:
 
 ```json
 {
-  "fileKey": "users/123/550e8400-e29b-41d4-a716-446655440000.png" // required string: storage object key
+  "fileKey": "users/123/550e8400-e29b-41d4-a716-446655440000.png"
 }
 ```
 
@@ -317,11 +316,11 @@ Generate a short-lived access URL to read an uploaded image by its fileKey.
 
 ```json
 {
-  "accessUrl": "https://my-bucket.s3.aws.com/users/123/550e8400-e29b-41d4-a716-446655440000.png?Signature=...", // string: pre-signed URL for GET
-  "fileKey": "users/123/550e8400-e29b-41d4-a716-446655440000.png", // string
-  "bucket": "my-bucket", // string
-  "region": "us-east-1", // string
-  "expiresIn": 300 // number (seconds)
+  "accessUrl": "https://my-bucket.s3.aws.com/users/123/550e8400-e29b-41d4-a716-446655440000.png?Signature=...",
+  "fileKey": "users/123/550e8400-e29b-41d4-a716-446655440000.png",
+  "bucket": "my-bucket",
+  "region": "us-east-1",
+  "expiresIn": 300
 }
 ```
 
@@ -333,44 +332,41 @@ Generate a short-lived access URL to read an uploaded image by its fileKey.
 }
 ```
 
+### AI Generation
+
 #### Generate from Image
 
-- Image Curation
-- Caption Generation
-- Song Recommendation
-- Topics Recommendation
-- Engagement Analytic
+Generate curation, caption, songs, topics, and engagement analytics from an image.
 
 **POST** `/generate/from-image`
 
 **Headers**:
 
-- `Authorization: Bearer SESSION_JWT_TOKEN` // required
+- `Authorization: Bearer SESSION_JWT_TOKEN`
 
 **Request (Example with comments)**:
 
 ```json
 {
-  "fileKey": "users/123/550e8400-e29b-41d4-a716-446655440000.png", // required: storage key of the image
-  "tasks": ["curation", "caption", "songs", "topics", "engagement"], // required: which outputs to generate
-  "language": "en", // optional
-  "context": {
-    "userId": "usr_123",
-    "postIntent": "travel vlog"
-  },
-  "limits": {
-    "maxSongs": 5,
-    "maxTopics": 8
-  }
+  "fileKey": "users/123/posts/foto-unik.jpg",
+  "imageUrl": "https://cdn.example.com/backup/foto-unik.jpg",
+  "tasks": ["curation", "caption", "songs", "topics", "engagement"],
+  "language": "en",
+  "context": { "userId": "usr_123", "postIntent": "travel vlog" },
+  "limits": { "maxSongs": 5, "maxTopics": 8 }
 }
 ```
 
-Note: If the generator needs a URL, the server should derive a presigned access URL internally from fileKey (do not persist long-lived URLs).
+Notes:
+
+- fileKey is required. Server derives a short-lived access URL internally from fileKey.
+- imageUrl is optional and only for back-compat; service will prefer fileKey.
 
 **Response (Success)**:
 
 ```json
 {
+  "imageUrl": "https://my-bucket.s3.aws.com/users/123/posts/foto-unik.jpg?Signature=...",
   "curation": {
     "isAppropriate": true,
     "labels": ["outdoor", "landscape"],
@@ -406,26 +402,27 @@ Note: If the generator needs a URL, the server should derive a presigned access 
 
 ```json
 {
-  "message": "Image access failed",
+  "status": 400,
+  "message": "Image URL not accessible",
   "code": "IMAGE_FETCH_FAILED",
-  "hint": "Ensure the fileKey exists and the server can generate a valid signed URL."
+  "hint": "Ensure the image is publicly accessible or provide a valid signed URL."
 }
 ```
 
 #### Get Generation History (Per Session/Image)
 
-Fetch generated outputs history for the current session, optionally filtered by image fileKey.
+Fetch generated outputs history for the current session.
 
 **GET** `/generate/history`
 
 **Headers**:
 
-- `Authorization: Bearer SESSION_JWT_TOKEN` // required: authenticated user session
+- `Authorization: Bearer SESSION_JWT_TOKEN`
 
-**Query Params (Example with comments)**:
+**Query Params**:
 
-- `limit=20` // optional: max items to return (default: 20, max: 100)
-- `cursor=hist_abc123` // optional: pagination cursor for next page
+- `limit=20`
+- `cursor=hist_abc123`
 
 **Response (Success)**:
 
@@ -433,19 +430,18 @@ Fetch generated outputs history for the current session, optionally filtered by 
 {
   "items": [
     {
-      "id": "hist_001", // string: history entry ID
-      "fileKey": "users/123/posts/foto-unik.jpg", // string: image storage key
-      "accessUrl": "https://my-bucket.s3.aws.com/users/123/posts/foto-unik.jpg", // string: access URL with timeout
+      "id": "hist_001",
+      "fileKey": "users/123/posts/foto-unik.jpg",
       "engagement": {
-        "estimatedScore": 0.78 // number 0–1
+        "estimatedScore": 0.78
       },
-      "createdAt": "2025-12-03T07:35:16Z" // string (RFC 3339): when this was generated
+      "createdAt": "2025-12-03T07:35:16Z"
     }
   ],
   "pageInfo": {
-    "limit": 20, // number: requested page size
-    "nextCursor": "hist_002", // string | null: use to fetch the next page
-    "hasNextPage": true // boolean: indicates if more items exist
+    "limit": 20,
+    "nextCursor": "hist_002",
+    "hasNextPage": true
   }
 }
 ```
@@ -454,43 +450,38 @@ Fetch generated outputs history for the current session, optionally filtered by 
 
 ```json
 {
-  "message": "Unauthorized", // string: error description
-  "code": "AUTH_REQUIRED" // string: machine-readable error code
+  "message": "Unauthorized",
+  "code": "AUTH_REQUIRED"
 }
 ```
 
 #### Get Generation History Detailed (Per Session/Image)
 
-Fetch detailed generation results for the current session. You can request a specific history entry or list all entries for an image.
+Fetch a single generated item by ID.
 
 **GET** `/generate/history/:id`
 
 **Headers**:
 
-- `Authorization: Bearer SESSION_JWT_TOKEN` // required: authenticated user session
-
-**Query Params (Example with comments)**:
-
-- `id=hist_001` // optional: fetch a single detailed history entry by its ID
+- `Authorization: Bearer SESSION_JWT_TOKEN`
 
 **Response (Success: Single Item)**:
 
 ```json
 {
   "item": {
-    "id": "hist_001", // string: history entry ID
-    "fileKey": "users/123/posts/foto-unik.jpg", // string: image storage key
-    "accessUrl": "https://my-bucket.s3.aws.com/users/123/posts/foto-unik.jpg", // string: access URL with timeout
-    "tasks": ["curation", "caption", "songs", "topics", "engagement"], // array: tasks executed
+    "id": "hist_001",
+    "fileKey": "users/123/posts/foto-unik.jpg",
+    "tasks": ["curation", "caption", "songs", "topics", "engagement"],
     "curation": {
-      "isAppropriate": true, // boolean
-      "labels": ["outdoor", "landscape"], // array
-      "risk": "low", // string: low/medium/high
-      "notes": "No sensitive content detected." // string
+      "isAppropriate": true,
+      "labels": ["outdoor", "landscape"],
+      "risk": "low",
+      "notes": "No sensitive content detected."
     },
     "caption": {
-      "text": "Sunset hues over the quiet coastline.", // string
-      "alternatives": ["Golden hour by the sea.", "A calm evening embracing the shore."] // array
+      "text": "Sunset hues over the quiet coastline.",
+      "alternatives": ["Golden hour by the sea.", "A calm evening embracing the shore."]
     },
     "songs": [{ "title": "Ocean Eyes", "artist": "Billie Eilish", "reason": "Calm coastal vibe" }],
     "topics": [
@@ -498,13 +489,13 @@ Fetch detailed generation results for the current session. You can request a spe
       { "topic": "Photography", "confidence": 0.89 }
     ],
     "engagement": {
-      "estimatedScore": 0.78, // number 0–1
-      "drivers": ["color palette", "subject clarity"], // array
-      "suggestions": ["Add a human subject", "Include location tag"] // array
+      "estimatedScore": 0.78,
+      "drivers": ["color palette", "subject clarity"],
+      "suggestions": ["Add a human subject", "Include location tag"]
     },
     "meta": {
-      "language": "en", // string
-      "generatedAt": "2025-12-03T07:30:16Z" // string (RFC 3339)
+      "language": "en",
+      "generatedAt": "2025-12-03T07:30:16Z"
     }
   }
 }
@@ -514,7 +505,7 @@ Fetch detailed generation results for the current session. You can request a spe
 
 ```json
 {
-  "message": "Unauthorized", // string: error description
-  "code": "AUTH_REQUIRED" // string: machine-readable error code
+  "message": "Unauthorized",
+  "code": "AUTH_REQUIRED"
 }
 ```
