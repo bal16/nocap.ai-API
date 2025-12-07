@@ -18,6 +18,7 @@ const app = new Elysia()
   .use(openApiPlugins)
   .use(uploadController)
   .use(contentGeneratorController)
+  .get('/', () => 'NoCap.AI API is running!')
   .get(
     '/health',
     ({ log }) => {
