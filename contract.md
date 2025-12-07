@@ -436,6 +436,9 @@ Fetch generated outputs history for the current session, optionally filtered by 
       "id": "hist_001", // string: history entry ID
       "fileKey": "users/123/posts/foto-unik.jpg", // string: image storage key
       "accessUrl": "https://my-bucket.s3.aws.com/users/123/posts/foto-unik.jpg", // string: access URL with timeout
+      "engagement": {
+        "estimatedScore": 0.78 // number 0–1
+      },
       "createdAt": "2025-12-03T07:35:16Z" // string (RFC 3339): when this was generated
     }
   ],
