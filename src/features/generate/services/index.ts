@@ -235,9 +235,9 @@ export const generateContent = async (
   }
 
   const finalResult: GenerateResponse = {
-    imageUrl:sourceUrl,
+    imageUrl: sourceUrl,
     curation: {
-      isAppropriate: aiData.curation?.isAppropriate ?? true,
+      isAppropriate: (designData.data.isAppropriate || aiData.curation?.isAppropriate) ?? true,
       risk: aiData.curation?.risk ?? 'low',
       notes: aiData.curation?.notes ?? '',
       labels: aiData.curation?.labels ?? [],
