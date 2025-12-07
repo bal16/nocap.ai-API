@@ -7,7 +7,7 @@ Backend API for a Marketing Sosmed App: auth, image uploads, AI-assisted content
 - Runtime: Bun
 - Framework: Elysia
 - DB: Postgres (via Prisma)
-- Auth: Better Auth (JWT)?
+- Auth: Better Auth
 - Docs: @elysiajs/openapi (Swagger UI)
 
 ## Getting Started
@@ -57,9 +57,12 @@ bun prisma migrate dev
 
 ## Project Structure
 
+We use feature based architecture
+
 ```text
 ├── .env
 ├── .env.example
+├── contract.md
 ├── package.json
 ├── prisma
 │   ├── migrations
@@ -69,14 +72,18 @@ bun prisma migrate dev
 ├── src
 │   ├── config
 │   │   ├── auth.ts
-│   │   └── db.ts
+│   │   ├── db.ts
+│   │   ├── fetcher.ts
+│   │   └── s3.ts
 │   ├── features
-│   │   ├── auth
+│   │   ├── generate
 │   │   └── upload
-│   ├── main.ts
+│   ├── app.ts
 │   ├── plugins
 │   └── shared
-└── tsconfig.json
+├── ...
+├── tsconfig.json
+└── vercel.json
 ```
 
 ## Features
