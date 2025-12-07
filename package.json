@@ -1,6 +1,7 @@
 {
   "name": "be",
   "version": "1.0.50",
+  "license": "Apache-2.0",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "bun run --watch src/app.ts",
