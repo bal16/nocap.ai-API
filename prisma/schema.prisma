@@ -189,6 +189,7 @@ model Engagement {
   id             String @id @default(cuid())
   contentId      String @unique
   estimatedScore Float
+  estimatedLikes Int
 
   content     GeneratedContent       @relation(fields: [contentId], references: [id], onDelete: Cascade)
   drivers     EngagementDriver[]

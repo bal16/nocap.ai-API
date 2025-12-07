@@ -2,7 +2,7 @@ import axios from 'axios';
 import { aiService, http } from '../../../config/fetcher';
 import { env } from '../../../shared/env';
 import { KnownErrors, serviceLogger } from './utils';
-import type { AnalyzeResponse } from '../models/ai-service.model';
+import type { AnalyzeResponse, PredictionResponse } from '../models/ai-service.model';
 
 /**
  * I/O helpers
@@ -39,6 +39,53 @@ export const getDesignAnalysis = async (imageUrl: string) => {
       );
     } else {
       serviceLogger.error({ err: error }, 'Design Analysis connection error');
+    }
+    throw new Error(KnownErrors.ANALYSIS_UNAVAILABLE);
+  }
+};
+
+interface EngagementParams {
+  follower: number;
+  hour: number;
+  day: number;
+  caption_len: number;
+  hastag_count: number;
+}
+
+export const getEngagementPrediction = async ({
+  follower,
+  hour,
+  day,
+  caption_len,
+  hastag_count,
+}: EngagementParams) => {
+  // Optional: allow skipping if env not configured
+  if (!env.ANALYSIS_API_URL) {
+    serviceLogger.warn('SKIP ANALYSIS: ANALYSIS_API_URL not set in env');
+    return null;
+  }
+
+  try {
+    const response = await aiService.post<PredictionResponse>('/predict', {
+      follower,
+      hour,
+      day,
+      caption_len,
+      hastag_count,
+    });
+    serviceLogger.info(
+      { status: response.status, data: response.data },
+      'Engagement Prediction responded'
+    );
+    return response.data;
+  } catch (error) {
+    if (axios.isAxiosError(error)) {
+      serviceLogger.error(
+        { status: error.response?.status, data: error.response?.data },
+        'Engagement Prediction API error'
+      );
+    } else {
+      serviceLogger.error({ err: error }, 'Engagement Prediction connection error');
     }
     throw new Error(KnownErrors.ANALYSIS_UNAVAILABLE);
   }

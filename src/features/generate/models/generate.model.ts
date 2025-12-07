@@ -10,6 +10,11 @@ import {
 
 // Request schema
 export const GenerateRequestSchema = z.object({
+  follower: z.number().describe('Number of followers the user has'),
+  hour: z.number().describe('Number of followers the user has'),
+  day: z.number().describe('Number of followers the user has'),
+  caption_len: z.number().describe('Number of followers the user has'),
+  hastag_count: z.number().describe('Number of followers the user has'),
   imageUrl: z.url({ message: 'Public image URL' }).optional(),
   fileKey: z.string().describe('The key for the file uploaded to our object storage'),
   tasks: z

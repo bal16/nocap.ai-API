@@ -25,6 +25,7 @@ export const TopicSchema = z.object({
 });
 
 export const EngagementSchema = z.object({
+  estimatedLikes: z.number(),
   estimatedScore: z.number(),
   drivers: z.array(z.string()),
   suggestions: z.array(z.string()),

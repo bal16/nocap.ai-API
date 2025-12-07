@@ -19,6 +19,13 @@ export interface AnalyzeResponse {
   data: Data;
 }
 
+export interface PredictionResponse {
+  status: number;
+  message: string;
+  data: {
+    likes: number;
+  };
+}
 
 export interface AnalyzeErrorResponse {
   detail: Detail[];

@@ -4,7 +4,7 @@ import type { ChatbotApiResponse } from '../models/chatbot.model';
 import { prisma } from '../../../config/db';
 import { chatAI } from '../../../config/fetcher';
 import { cleanFencedJson, KnownErrors, safeJsonParse, serviceLogger, sliceIfNeeded } from './utils';
-import { getDesignAnalysis, getImageAsBase64 } from './io';
+import { getDesignAnalysis, getEngagementPrediction, getImageAsBase64 } from './io';
 import { buildAnalysisContext, buildPrompt } from './prompts';
 import { getPreSignedAccess } from '../../upload/upload.service';
 
@@ -68,6 +68,7 @@ const saveHistory = async (userId: string, fileKey: string, result: GenerateResp
         data: {
           contentId: content.id,
           estimatedScore: result.engagement.estimatedScore ?? 0.5,
+          estimatedLikes: result.engagement.estimatedLikes ?? 0,
         },
         select: { id: true },
       });
@@ -176,6 +177,18 @@ export const generateContent = async (
     return null;
   });
 
+  const likesPrediction = await getEngagementPrediction({
+    follower: body.follower,
+    hour: body.hour,
+    day: body.day,
+    caption_len: body.caption_len,
+    hastag_count: body.hastag_count,
+  }).catch((err: unknown) => {
+    if (err instanceof Error && err.message === KnownErrors.ANALYSIS_UNAVAILABLE) {
+      throw err;
+    }
+    return null;
+  });
   if (!designData) {
     serviceLogger.warn('Design analysis unavailable, proceeding without it');
 
@@ -190,7 +203,7 @@ export const generateContent = async (
       caption: { text: '', alternatives: [] },
       songs: [],
       topics: [],
-      engagement: { estimatedScore: 0.5, drivers: [], suggestions: [] },
+      engagement: { estimatedScore: 0.5, estimatedLikes: 0, drivers: [], suggestions: [] },
       meta: { language: body.language || 'id', generatedAt: new Date().toISOString() },
     };
 
@@ -246,6 +259,7 @@ export const generateContent = async (
     songs: sliceIfNeeded(aiData.songs, maxSongs),
     topics: sliceIfNeeded(aiData.topics, maxTopics),
     engagement: {
+      estimatedLikes: likesPrediction?.data.likes ?? 0,
       estimatedScore: aiData.engagement?.estimatedScore ?? 0.5,
       drivers: aiData.engagement?.drivers ?? [],
       suggestions: aiData.engagement?.suggestions ?? [],
@@ -342,6 +356,7 @@ export const getHistoryDetail = async (userId: string, historyId: string) => {
       topics: item.topics.map((t) => ({ topic: t.topic, confidence: t.confidence ?? undefined })),
       engagement: {
         estimatedScore: item.engagement?.estimatedScore ?? 0.5,
+        estimatedLikes: item.engagement?.estimatedLikes ?? 0,
         drivers: (item.engagement?.drivers ?? []).map((d) => d.text),
         suggestions: (item.engagement?.suggestions ?? []).map((s) => s.text),
       },
