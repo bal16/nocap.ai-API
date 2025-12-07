@@ -180,6 +180,7 @@ export const generateContent = async (
     serviceLogger.warn('Design analysis unavailable, proceeding without it');
 
     const finalResult: GenerateResponse = {
+      imageUrl: sourceUrl,
       curation: {
         isAppropriate: true,
         risk: 'low',
@@ -234,6 +235,7 @@ export const generateContent = async (
   }
 
   const finalResult: GenerateResponse = {
+    imageUrl:sourceUrl,
     curation: {
       isAppropriate: aiData.curation?.isAppropriate ?? true,
       risk: aiData.curation?.risk ?? 'low',

@@ -32,6 +32,7 @@ export const GenerateRequestSchema = z.object({
 });
 
 export const GenerateResponseSchema = z.object({
+  imageUrl: z.url(),
   curation: CurationSchema,
   caption: CaptionSchema,
   songs: z.array(SongSchema),
