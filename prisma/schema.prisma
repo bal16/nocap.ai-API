@@ -80,7 +80,16 @@ model Verification {
 model GeneratedContent {
   id        String   @id @default(cuid())
   userId    String
-  imageUrl  String
+  // Prefer fileKey (object key in S3). Keep imageUrl temporarily for back-compat.
+  imageUrl  String? // deprecated; derive signed URL at runtime
+  fileKey   String? // e.g. "users/{userId}/{cuid()}.jpg"
+  bucket    String? // optional if single bucket; helpful for multi-tenant/multi-env
+  region    String? // optional; store if generating URLs client-side
+  mimeType  String? // e.g. "image/jpeg"
+  sizeBytes Int? // store size to enforce limits
+  width     Int? // optional image metadata
+  height    Int? // optional image metadata
+  checksum  String? // e.g. sha256 to prevent duplicates
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -96,6 +105,7 @@ model GeneratedContent {
   topics TopicRecommendation[]
 
   @@index([userId, createdAt])
+  @@index([fileKey])
   @@map("generated_content")
 }
 
