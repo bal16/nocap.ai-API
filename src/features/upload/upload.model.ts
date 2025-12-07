@@ -18,7 +18,22 @@ export const UploadRequestSchema = z.object({
 });
 
 export const UploadResponseSchema = z.object({
-  uploadUrl: z.url(), // pre-signed URL for upload
-  fileKey: z.string(), // storage object key to persist
-  accessUrl: z.url(), // signed URL for accessing the uploaded image
+  uploadUrl: z.url(),
+  fileKey: z.string(),
+  bucket: z.string(),
+  region: z.string(),
+  expiresIn: z.number(),
+  maxSize: z.number(),
+});
+
+export const AccessUrlRequestSchema = z.object({
+  fileKey: z.string().min(1, 'fileKey is required'),
+});
+
+export const AccessUrlResponseSchema = z.object({
+  accessUrl: z.url(),
+  fileKey: z.string(),
+  bucket: z.string(),
+  region: z.string(),
+  expiresIn: z.number(),
 });

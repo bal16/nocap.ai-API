@@ -12,6 +12,7 @@ export const s3 = new S3Client({
 });
 
 export const BUCKET_NAME = env.S3_BUCKET_NAME;
+export const REGION = env.S3_REGION || 'ap-southeast-1';
 export const EXPIRATION_TIME_UPLOAD = 60 * 5; // 5 minutes
 export const EXPIRATION_TIME_ACCESS = 60 * 60; // 1 hour
 export const DEFAULT_MAX_SIZE = 5 * 1024 * 1024; // 5MB

@@ -6,24 +6,36 @@ import { loggerPlugins } from '../../plugins/logger';
 import { betterAuthPlugin } from '../../plugins/better-auth';
 import { openApiPlugins } from '../../plugins/open-api';
 
-import { getPreSignedUrl } from './upload.service';
-import { generatePresignUrlSchema } from './upload.docs';
+import { getPreSignedUpload, getPreSignedAccess } from './upload.service';
+import { generatePresignUrlSchema, generateAccessUrlSchema } from './upload.docs';
+import { AccessUrlRequestSchema } from './upload.model';
 
 export const uploadController = new Elysia({ name: 'Upload Controller', prefix: '/image' })
   .use(loggerPlugins)
   .use(betterAuthPlugin)
   .use(openApiPlugins)
+  // Init upload: returns uploadUrl + fileKey
   .post(
     '/get-presign-url',
-    async ({ body }) => {
+    async ({ body, user }) => {
       const { fileName, contentType } = body;
 
-      const { uploadUrl, accessUrl, fileKey } = await getPreSignedUrl(fileName, contentType);
+      const userId = user?.id;
+      if (!userId) {
+        throw new Error('Unauthorized');
+      }
+
+      const { uploadUrl, fileKey, bucket, region } = await getPreSignedUpload(
+        userId,
+        contentType,
+        fileName
+      );
 
       return {
         uploadUrl,
         fileKey,
-        accessUrl,
+        bucket,
+        region,
         expiresIn: EXPIRATION_TIME_UPLOAD,
         maxSize: DEFAULT_MAX_SIZE,
       };
@@ -31,5 +43,26 @@ export const uploadController = new Elysia({ name: 'Upload Controller', prefix: 
     {
       auth: true,
       ...generatePresignUrlSchema,
+    }
+  )
+  // Read: returns short-lived access URL for a given fileKey
+  .post(
+    '/get-access-url',
+    async ({ body }) => {
+      const parsed = AccessUrlRequestSchema.parse(body);
+      const { fileKey } = parsed;
+
+      const { accessUrl, bucket, region } = await getPreSignedAccess(fileKey);
+      return {
+        accessUrl,
+        fileKey,
+        bucket,
+        region,
+        expiresIn: 300, // align with EXPIRATION_TIME_ACCESS if you export it
+      };
+    },
+    {
+      auth: true,
+      ...generateAccessUrlSchema,
     }
   );
