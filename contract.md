@@ -278,9 +278,10 @@ Get a pre-signed URL to upload an image directly to storage (S3 Compatible). The
 
 ```json
 {
-  "uploadUrl": "https://my-bucket.s3.aws.com/users/123/posts/foto-unik.jpg?Signature=...", // string: pre-signed URL for upload (URL KOTOR - untuk upload)
-  "fileKey": "users/123/posts/foto-unik.jpg", // string: storage object key to persist (KUNCI - simpan ini!)
-  "accessUrl": "https://my-bucket.s3.aws.com/users/123/posts/foto-unik.jpg?Signature=...", // string: signed URL for accessing the uploaded image (URL BERSIH - untuk akses)
+  "uploadUrl": "https://my-bucket.s3.aws.com/users/123/550e8400-e29b-41d4-a716-446655440000.png?Signature=...", // string: pre-signed URL for upload (PUT)
+  "fileKey": "users/123/550e8400-e29b-41d4-a716-446655440000.png", // string: storage object key to persist
+  "bucket": "my-bucket", // string: bucket name
+  "region": "us-east-1", // string: storage region
   "expiresIn": 300, // number (seconds): how long the presign stays valid
   "maxSize": 5242880 // number (bytes): max allowed upload size
 }
@@ -290,19 +291,15 @@ Get a pre-signed URL to upload an image directly to storage (S3 Compatible). The
 
 ```json
 {
-  "message": "Unsupported content type" // string: error message (e.g., MIME validation failed)
+  "message": "Unsupported content type"
 }
 ```
 
-#### Generate from Image
+#### Get Access URL Image
 
-- Image Curation (whether an image is appropriate to post or not)
-- Caption Generation (based on image, via accessible S3 URL/accessUrl)
-- Song Recommendation (based on image)
-- Topics Recommendation (based on image)
-- Engagement Analytic (estimated engagement metrics based on image)
+Generate a short-lived access URL to read an uploaded image by its fileKey.
 
-**POST** `/generate/from-image`
+**POST** `/image/get-access-url`
 
 **Headers**:
 
@@ -312,18 +309,7 @@ Get a pre-signed URL to upload an image directly to storage (S3 Compatible). The
 
 ```json
 {
-  "fileKey": "users/123/posts/foto-unik.jpg", // required string: storage key of the image; used to retrieve/authorize access
-  "accessUrl": "https://my-bucket.s3.aws.com/users/123/posts/foto-unik.jpg?Signature=...", // optional string: signed URL for direct access if needed
-  "tasks": ["curation", "caption", "songs", "topics", "engagement"], // required array: which outputs to generate
-  "language": "en", // optional string: output language (e.g., "en", "id")
-  "context": {
-    "userId": "usr_123", // optional string: user context (personalization)
-    "postIntent": "travel vlog" // optional string: hint to improve relevance
-  },
-  "limits": {
-    "maxSongs": 5, // optional number: limit song recommendations
-    "maxTopics": 8 // optional number: limit topics
-  }
+  "fileKey": "users/123/550e8400-e29b-41d4-a716-446655440000.png" // required string: storage object key
 }
 ```
 
@@ -331,14 +317,68 @@ Get a pre-signed URL to upload an image directly to storage (S3 Compatible). The
 
 ```json
 {
+  "accessUrl": "https://my-bucket.s3.aws.com/users/123/550e8400-e29b-41d4-a716-446655440000.png?Signature=...", // string: pre-signed URL for GET
+  "fileKey": "users/123/550e8400-e29b-41d4-a716-446655440000.png", // string
+  "bucket": "my-bucket", // string
+  "region": "us-east-1", // string
+  "expiresIn": 300 // number (seconds)
+}
+```
+
+**Response (Error)**:
+
+```json
+{
+  "message": "fileKey is required"
+}
+```
+
+#### Generate from Image
+
+- Image Curation
+- Caption Generation
+- Song Recommendation
+- Topics Recommendation
+- Engagement Analytic
+
+**POST** `/generate/from-image`
+
+**Headers**:
+
+- `Authorization: Bearer SESSION_JWT_TOKEN` // required
+
+**Request (Example with comments)**:
+
+```json
+{
+  "fileKey": "users/123/550e8400-e29b-41d4-a716-446655440000.png", // required: storage key of the image
+  "tasks": ["curation", "caption", "songs", "topics", "engagement"], // required: which outputs to generate
+  "language": "en", // optional
+  "context": {
+    "userId": "usr_123",
+    "postIntent": "travel vlog"
+  },
+  "limits": {
+    "maxSongs": 5,
+    "maxTopics": 8
+  }
+}
+```
+
+Note: If the generator needs a URL, the server should derive a presigned access URL internally from fileKey (do not persist long-lived URLs).
+
+**Response (Success)**:
+
+```json
+{
   "curation": {
-    "isAppropriate": true, // boolean: whether image passes safety/appropriateness checks
-    "labels": ["outdoor", "landscape"], // array: descriptive labels detected
-    "risk": "low", // string: risk level (e.g., low/medium/high)
-    "notes": "No sensitive content detected." // string: moderation notes
+    "isAppropriate": true,
+    "labels": ["outdoor", "landscape"],
+    "risk": "low",
+    "notes": "No sensitive content detected."
   },
   "caption": {
-    "text": "Sunset hues over the quiet coastline.", // string: generated caption
+    "text": "Sunset hues over the quiet coastline.",
     "alternatives": ["Golden hour by the sea.", "A calm evening embracing the shore."]
   },
   "songs": [
@@ -351,13 +391,13 @@ Get a pre-signed URL to upload an image directly to storage (S3 Compatible). The
     { "topic": "Nature", "confidence": 0.87 }
   ],
   "engagement": {
-    "estimatedScore": 0.78, // number: normalized 0–1 engagement estimate
-    "drivers": ["color palette", "subject clarity"], // array: factors influencing engagement
-    "suggestions": ["Add a human subject", "Include location tag"] // array: improvement tips
+    "estimatedScore": 0.78,
+    "drivers": ["color palette", "subject clarity"],
+    "suggestions": ["Add a human subject", "Include location tag"]
   },
   "meta": {
-    "language": "en", // string: language used for generation
-    "generatedAt": "2025-12-03T07:30:16Z" // string (RFC 3339): generation timestamp
+    "language": "en",
+    "generatedAt": "2025-12-03T07:30:16Z"
   }
 }
 ```
@@ -366,9 +406,9 @@ Get a pre-signed URL to upload an image directly to storage (S3 Compatible). The
 
 ```json
 {
-  "message": "Image URL not accessible", // string: error message
-  "code": "IMAGE_FETCH_FAILED", // string: machine-readable error code
-  "hint": "Ensure the image is publicly accessible or provide a valid signed URL." // string: remediation hint
+  "message": "Image access failed",
+  "code": "IMAGE_FETCH_FAILED",
+  "hint": "Ensure the fileKey exists and the server can generate a valid signed URL."
 }
 ```
 
