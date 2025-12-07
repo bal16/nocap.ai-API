@@ -288,12 +288,17 @@ export const getUserHistory = async (userId: string, limitStr: string = '20') =>
     nextCursor = nextItem!.id;
   }
 
+  const items = await generatedContent.map(async (item) => {
+    const imageUrl = await getPreSignedAccess(item.fileKey).then((res) => res.accessUrl);
+    
+    return ({
+    ...item,
+    imageUrl,
+    createdAt: item.createdAt.toISOString(),
+  })});
+
   return {
-    items: generatedContent.map(async (item) => ({
-      ...item,
-      imageUrl: await getPreSignedAccess(item.fileKey).then((res) => res.accessUrl),
-      createdAt: item.createdAt.toISOString(),
-    })),
+    items,
     pageInfo: { limit, nextCursor, hasNextPage },
   };
 };
