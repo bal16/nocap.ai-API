@@ -10,7 +10,7 @@ import {
 
 // Request schema
 export const GenerateRequestSchema = z.object({
-  imageUrl: z.url({ message: 'Public image URL' }),
+  imageUrl: z.url({ message: 'Public image URL' }).optional(),
   fileKey: z.string().describe('The key for the file uploaded to our object storage'),
   tasks: z
     .array(z.string())
