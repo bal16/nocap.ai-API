@@ -81,15 +81,7 @@ model GeneratedContent {
   id     String @id @default(cuid())
   userId String
 
-  imageUrl  String? // deprecated; keep optional for back-compat
-  fileKey   String // REQUIRED: S3 object key
-  bucket    String? // optional
-  region    String? // optional
-  mimeType  String? // optional
-  sizeBytes Int? // optional
-  width     Int? // optional
-  height    Int? // optional
-  checksum  String? // optional
+  fileKey String // REQUIRED: S3 object key
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -105,8 +97,7 @@ model GeneratedContent {
 
   @@index([userId, createdAt])
   @@index([fileKey])
-  // If exactly one row per object, uncomment:
-  // @@unique([fileKey])
+  // @@unique([fileKey]) // enable if one row per object
   @@map("generated_content")
 }
 

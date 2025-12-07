@@ -10,12 +10,12 @@ import {
 
 // Request schema
 export const GenerateRequestSchema = z.object({
-  imageUrl: z.url({ message: 'URL Gambar publik' }),
-  fileKey: z.string().optional(),
+  imageUrl: z.url({ message: 'Public image URL' }),
+  fileKey: z.string().describe('The key for the file uploaded to our object storage'),
   tasks: z
     .array(z.string())
     .default(['curation', 'caption', 'songs', 'topics', 'engagement'])
-    .describe('Daftar tugas yang harus dikerjakan AI'),
+    .describe('List of tasks for the AI to perform'),
   language: z.string().default('id').optional(),
   context: z
     .object({

@@ -32,6 +32,7 @@ export const HistoryListResponseSchema = z.object({
 export const HistoryDetailResponseSchema = z.object({
   item: z.object({
     id: z.string(),
+    fileKey: z.string(),
     imageUrl: z.string(),
     curation: CurationSchema,
     caption: CaptionSchema,

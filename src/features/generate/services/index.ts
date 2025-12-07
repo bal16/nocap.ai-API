@@ -1,23 +1,21 @@
 import axios, { AxiosError, type AxiosResponse } from 'axios';
-
 import type { GenerateRequest, GenerateResponse } from '../models/generate.model';
 import type { ChatbotApiResponse } from '../models/chatbot.model';
-
 import { prisma } from '../../../config/db';
 import { chatAI } from '../../../config/fetcher';
-
 import { cleanFencedJson, KnownErrors, safeJsonParse, serviceLogger, sliceIfNeeded } from './utils';
 import { getDesignAnalysis, getImageAsBase64 } from './io';
 import { buildAnalysisContext, buildPrompt } from './prompts';
+import { getPreSignedAccess } from '../../upload/upload.service';
 
 /**
  * Persistence (normalized)
  */
-const saveHistory = async (userId: string, imageUrl: string, result: GenerateResponse) => {
+const saveHistory = async (userId: string, fileKey: string, result: GenerateResponse) => {
   try {
-    // 1) Create GeneratedContent
+    // 1) Create GeneratedContent (fileKey-first)
     const content = await prisma.generatedContent.create({
-      data: { userId, imageUrl },
+      data: { userId, fileKey },
       select: { id: true },
     });
 
@@ -164,7 +162,14 @@ export const generateContent = async (
   const maxSongs = body.limits?.maxSongs ?? 5;
   const maxTopics = body.limits?.maxTopics ?? 5;
 
-  const designData = await getDesignAnalysis(body.imageUrl).catch((err) => {
+  // Require fileKey
+  if (!body.fileKey) {
+    throw new Error('fileKey is required');
+  }
+
+  const sourceUrl = await getPreSignedAccess(body.fileKey).then((res) => res.accessUrl);
+
+  const designData = await getDesignAnalysis(sourceUrl).catch((err) => {
     if (err instanceof Error && err.message === KnownErrors.ANALYSIS_UNAVAILABLE) {
       throw err;
     }
@@ -188,6 +193,9 @@ export const generateContent = async (
       meta: { language: body.language || 'id', generatedAt: new Date().toISOString() },
     };
 
+    // Persist minimal history with fileKey
+    saveHistory(userId, body.fileKey, finalResult).catch(() => {});
+
     serviceLogger.info(
       { userId, durationMs: Date.now() - startedAt },
       'Content generated with fallback due to analysis unavailability'
@@ -207,7 +215,7 @@ export const generateContent = async (
     analysisContext,
   });
 
-  const base64Image = await getImageAsBase64(body.imageUrl);
+  const base64Image = await getImageAsBase64(sourceUrl);
 
   let aiData: Partial<GenerateResponse>;
   try {
@@ -243,8 +251,8 @@ export const generateContent = async (
     meta: { language, generatedAt: new Date().toISOString() },
   };
 
-  // Persist into normalized tables (non-blocking)
-  saveHistory(userId, body.imageUrl, finalResult).catch(() => {});
+  // Persist into normalized tables with fileKey
+  saveHistory(userId, body.fileKey, finalResult).catch(() => {});
 
   serviceLogger.info(
     { userId, durationMs: Date.now() - startedAt },
@@ -256,30 +264,29 @@ export const generateContent = async (
 export const getUserHistory = async (userId: string, limitStr: string = '20') => {
   const limit = parseInt(limitStr) || 20;
 
-  const items = await prisma.generatedContent.findMany({
+  const generatedContent = await prisma.generatedContent.findMany({
     where: { userId },
     take: limit + 1,
     orderBy: { createdAt: 'desc' },
     select: {
       id: true,
-      imageUrl: true,
       createdAt: true,
+      fileKey: true,
     },
   });
 
   let nextCursor: string | null = null;
-  const hasNextPage = items.length > limit;
+  const hasNextPage = generatedContent.length > limit;
 
   if (hasNextPage) {
-    const nextItem = items.pop();
+    const nextItem = generatedContent.pop();
     nextCursor = nextItem!.id;
   }
 
   return {
-    items: items.map((item) => ({
-      id: item.id,
-      imageUrl: item.imageUrl,
-      fileKey: null,
+    items: generatedContent.map(async (item) => ({
+      ...item,
+      imageUrl: await getPreSignedAccess(item.fileKey).then((res) => res.accessUrl),
       createdAt: item.createdAt.toISOString(),
     })),
     pageInfo: { limit, nextCursor, hasNextPage },
@@ -304,8 +311,8 @@ export const getHistoryDetail = async (userId: string, historyId: string) => {
   return {
     item: {
       id: item.id,
-      imageUrl: item.imageUrl,
-      filekey: null,
+      fileKey: item.fileKey,
+      imageUrl: await getPreSignedAccess(item.fileKey).then((res) => res.accessUrl),
       curation: {
         isAppropriate: item.curation?.isAppropriate ?? true,
         risk: item.curation?.risk ?? 'low',
