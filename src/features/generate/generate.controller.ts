@@ -57,7 +57,8 @@ export const contentGeneratorController = new Elysia({
       try {
         const result = await getUserHistory(user.id, query.limit);
         set.status = 200;
-        return { status: 200, message: 'History fetched successfully',  ...result };
+        // return { status: 200, message: 'History fetched successfully',  ...result };
+        return result;
       } catch (err: unknown) {
         set.status = 500;
         const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';

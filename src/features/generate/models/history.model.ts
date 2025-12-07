@@ -23,7 +23,7 @@ export const HistoryListResponseSchema = z.object({
         .object({
           estimatedScore: z.number(),
         })
-        .optional(),
+        .nullable(),
       createdAt: z.string(),
     })
   ),
