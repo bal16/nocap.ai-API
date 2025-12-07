@@ -272,6 +272,11 @@ export const getUserHistory = async (userId: string, limitStr: string = '20') =>
       id: true,
       createdAt: true,
       fileKey: true,
+      engagement: {
+        select: {
+          estimatedScore: true,
+        },
+      },
     },
   });
 
