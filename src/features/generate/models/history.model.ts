@@ -19,9 +19,11 @@ export const HistoryListResponseSchema = z.object({
       id: z.string(),
       fileKey: z.union([z.string(), z.null()]),
       imageUrl: z.string(),
-      engagement: z.object({
-        estimatedScore: z.number(),
-      }),
+      engagement: z
+        .object({
+          estimatedScore: z.number(),
+        })
+        .optional(),
       createdAt: z.string(),
     })
   ),
