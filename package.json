@@ -3,7 +3,7 @@
   "version": "1.0.50",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "bun run --watch src/main.ts",
+    "dev": "bun run --watch src/app.ts",
     "start": "bun run src/app.ts",
     "db:generate": "bun prisma generate",
     "build": "bun db:generate",
