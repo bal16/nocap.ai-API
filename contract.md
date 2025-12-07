@@ -348,6 +348,11 @@ Generate curation, caption, songs, topics, and engagement analytics from an imag
 
 ```json
 {
+  "follower": 10, //Number of followers the user has
+  "hour": 10, //Number of followers the user has
+  "day": 10, //Number of followers the user has
+  "caption_len": 10, //Number of followers the user has
+  "hastag_count": 10, //Number of followers the user has
   "fileKey": "users/123/posts/foto-unik.jpg",
   "imageUrl": "https://cdn.example.com/backup/foto-unik.jpg",
   "tasks": ["curation", "caption", "songs", "topics", "engagement"],
@@ -388,6 +393,7 @@ Notes:
   ],
   "engagement": {
     "estimatedScore": 0.78,
+    "estimatedLikes": 10,
     "drivers": ["color palette", "subject clarity"],
     "suggestions": ["Add a human subject", "Include location tag"]
   },
@@ -490,6 +496,7 @@ Fetch a single generated item by ID.
     ],
     "engagement": {
       "estimatedScore": 0.78,
+      "estimatedLikes": 10,
       "drivers": ["color palette", "subject clarity"],
       "suggestions": ["Add a human subject", "Include location tag"]
     },
