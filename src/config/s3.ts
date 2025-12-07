@@ -4,11 +4,11 @@ import { env } from '../shared/env';
 export const s3 = new S3Client({
   region: env.S3_REGION || 'ap-southeast-1',
   endpoint: env.S3_ENDPOINT,
-  forcePathStyle: true,
   credentials: {
-    accessKeyId: env.S3_ACCESS_KEY_ID,
-    secretAccessKey: env.S3_SECRET_ACCESS_KEY,
+    accessKeyId: env.S3_ACCESS_KEY_ID.trim(),
+    secretAccessKey: env.S3_SECRET_ACCESS_KEY.trim(),
   },
+  forcePathStyle: true
 });
 
 export const BUCKET_NAME = env.S3_BUCKET_NAME;
