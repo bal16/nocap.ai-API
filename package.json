@@ -23,7 +23,7 @@
     "@types/node": "^24.10.1",
     "@types/pg": "^8.15.6",
     "axios": "^1.13.2",
-    "better-auth": "^1.4.4",
+    "better-auth": "^1.4.7",
     "dotenv": "^17.2.3",
     "elysia": "latest",
     "pg": "^8.16.3",
