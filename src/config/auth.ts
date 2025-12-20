@@ -14,11 +14,10 @@ export const auth = betterAuth({
   trustedOrigins: env.TRUSTED_ORIGINS ? env.TRUSTED_ORIGINS.split(',') : [],
 
   advanced: {
-    useSecureCookies: true,
     defaultCookieAttributes: {
       sameSite: 'None',
       secure: true,
-    }
+    },
   },
 
   plugins: [openAPI(), bearer()],
