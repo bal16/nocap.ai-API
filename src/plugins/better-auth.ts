@@ -28,7 +28,7 @@ const getSchema = async () => {
 };
 
 export const OpenAPI = {
-  getPaths: (prefix = '/auth') =>
+  getPaths: (prefix = '/api/auth') =>
     getSchema().then(({ paths }) => {
       const reference: typeof paths = Object.create(null);
 
