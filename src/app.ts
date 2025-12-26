@@ -58,4 +58,4 @@ logger.info(
   `🦊 Elysia is running at ${app.server?.hostname}:${app.server?.port} (${env.NODE_ENV})`
 );
 
-export default app;
+// export default app;
